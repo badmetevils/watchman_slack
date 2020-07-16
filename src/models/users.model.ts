@@ -1,23 +1,27 @@
-import db from './db';
-import { STRING } from 'sequelize/types';
+import { Sequelize, DataTypes } from 'sequelize';
+import { IUser } from './interface/model';
 
-export default () =>
-  db.define(
+const userModel = (db: Sequelize) =>
+  db.define<IUser>(
     'users',
     {
       slackID: {
-        type: STRING,
+        type: DataTypes.STRING,
         field: 'slack_id',
         allowNull: false,
         primaryKey: true
       },
       name: {
-        type: STRING,
+        type: DataTypes.STRING,
         field: 'name',
         allowNull: false
       }
     },
     {
-      freezeTableName: true
+      freezeTableName: true,
+      timestamps: false,
+      tableName: 'user'
     }
   );
+
+export default userModel;

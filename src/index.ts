@@ -5,10 +5,20 @@ import { watchmanRTM } from '@osl-slack-rtm-app';
 import { watchman } from '@osl-slack-bolt';
 import { SubscribePresence } from '@watchman-rtm/SubscribePresence';
 import { ListenPresenceChange } from '@watchman-rtm/ListenPresenceChange';
+import db from '@models/index';
 
-// SubscribePresence.allSlackUsers();
-// ListenPresenceChange.listen();
+// setting up the database
+(async () => {
+  try {
+    let response = await db.sequelize.sync();
+    console.log('🆒 Database is connected and working fine');
+  } catch (error) {
+    console.log('😨 Database is not reachable');
+    logger.log('error', error);
+  }
+})();
 
+// Booting up the RTM services
 (async () => {
   try {
     const { self, team, ...rest } = await watchmanRTM.start();
@@ -17,6 +27,8 @@ import { ListenPresenceChange } from '@watchman-rtm/ListenPresenceChange';
     logger.error(error);
   }
 })();
+
+// Booting up the connection for webAPI communication
 
 (async () => {
   try {
