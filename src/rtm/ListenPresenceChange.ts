@@ -1,6 +1,6 @@
 import { watchmanRTM } from '@osl-slack-rtm-app';
 
-class ListenPresenceChange {
+export default class ListenPresenceChange {
   async listen() {
     watchmanRTM.on('presence_change', event => {
       // console.log(`User: ${event.user} Presence: ${event.presence}`);
@@ -8,5 +8,3 @@ class ListenPresenceChange {
     });
   }
 }
-const lp = new ListenPresenceChange();
-export { lp as ListenPresenceChange };

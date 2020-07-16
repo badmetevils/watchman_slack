@@ -1,8 +1,8 @@
 import { Sequelize, DataTypes } from 'sequelize';
-import { IUser } from './interface/model';
+import { IUserModel } from './interface/model';
 
 const userModel = (db: Sequelize) =>
-  db.define<IUser>(
+  db.define<IUserModel>(
     'users',
     {
       slackID: {
@@ -18,9 +18,9 @@ const userModel = (db: Sequelize) =>
       }
     },
     {
-      freezeTableName: true,
+      // freezeTableName: true,
       timestamps: false,
-      tableName: 'user'
+      tableName: 'users'
     }
   );
 

@@ -14,9 +14,10 @@
     "moduleResolution": "node",
     "paths": {
       "@shared/*": ["src/shared/*"],
-      "@osl-slack-bolt": ["src/app"],
+      "@osl-slack-bolt": ["src/bolt"],
       "@osl-slack-rtm-app": ["src/rtm"],
       "@osl-slack-web-app": ["src/web"],
+      "@bin/*": ["src/bin/*"],
       "@watchman-hooks/*": ["src/webhooks/*"],
       "@typing/*": ["src/typings/*"],
       "@watchman-rtm/*": ["src/rtm/*"],

@@ -1,6 +1,9 @@
-import { IUser } from './interface/model.d';
-import userModel from './users.model';
 import { Sequelize, ModelCtor } from 'sequelize';
+import userModel from './users.model';
+import userTimeLogsModel from './userTimeLogs.model';
+import userStatusLogModel from './userStatusLogs.model';
+import { IUserModel, IUserTimeLogModel, IUserStatusLogModel } from './interface/model.d';
+import winston from 'winston';
 
 const {
   DB_USER = 'root',
@@ -25,7 +28,9 @@ interface Idb {
   sequelize: typeof sequelize;
   dataType: typeof Sequelize;
   table: {
-    user: ModelCtor<IUser>;
+    user: ModelCtor<IUserModel>;
+    userStatusLogs: ModelCtor<IUserStatusLogModel>;
+    userTimeLogs: ModelCtor<IUserTimeLogModel>;
   };
 }
 
@@ -33,7 +38,9 @@ const db: Idb = {
   sequelize,
   dataType: Sequelize,
   table: {
-    user: userModel(sequelize)
+    user: userModel(sequelize),
+    userStatusLogs: userStatusLogModel(sequelize),
+    userTimeLogs: userTimeLogsModel(sequelize)
   }
 };
 
