@@ -3,6 +3,7 @@ import { watchmanRTM } from '@osl-slack-rtm-app';
 import { watchman } from '@osl-slack-bolt';
 import db from '@models/index';
 import Presence from '@bin/presence';
+import time from '@lib/time';
 
 export default class Init {
   async connect() {

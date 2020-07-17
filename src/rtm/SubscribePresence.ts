@@ -7,17 +7,13 @@ import logger from '@shared/Logger';
 export default class SubscribePresence {
   async allSlackUsers() {
     try {
-      console.log('-------------RUNNING-----------------------------');
       let list: IUserModel[] = await db.table.user.findAll();
       let listInDb: IUser[] = list.map(d => d.get());
-      // console.log({ listInDb });
       if (listInDb.length === 0) {
         this.storeUsers();
       } else {
         this.attachSubscriber(listInDb);
       }
-
-      // console.log({ list });
     } catch (error) {
       logger.log('error', error);
     }

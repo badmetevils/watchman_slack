@@ -18,6 +18,7 @@
       "@osl-slack-rtm-app": ["src/rtm"],
       "@osl-slack-web-app": ["src/web"],
       "@bin/*": ["src/bin/*"],
+      "@lib/*": ["src/lib/*"],
       "@watchman-hooks/*": ["src/webhooks/*"],
       "@typing/*": ["src/typings/*"],
       "@watchman-rtm/*": ["src/rtm/*"],

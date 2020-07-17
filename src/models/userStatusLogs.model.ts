@@ -18,11 +18,11 @@ const userStatusLogModel = (db: Sequelize) =>
       },
       date: {
         type: DataTypes.DATE,
-        allowNull: false,
-        field: 'date'
+        field: 'date',
+        defaultValue: DataTypes.NOW
       },
       timestamp: {
-        type: 'TIMESTAMP',
+        type: DataTypes.DATE,
         field: 'timestamp'
       },
       status: {

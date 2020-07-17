@@ -21,6 +21,12 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
     max: 10,
     min: 0,
     idle: 10000
+  },
+  timezone: process.env.TIME_ZONE || 'Asia/Kolkata',
+  dialectOptions: {
+    useUTC: false,
+    dateStrings: true,
+    typeCast: true
   }
 });
 
