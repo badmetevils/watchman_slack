@@ -1,3 +1,4 @@
+import { Moment } from 'moment-timezone';
 import time from '@lib/time';
 
 export const isWorkingHours = (timeStamp: string | undefined | null = null): boolean => {
@@ -10,4 +11,8 @@ export const isWorkingHours = (timeStamp: string | undefined | null = null): boo
     return true;
   }
   return false;
+};
+
+export const minutesFromNow = (timeStamp: Moment) => {
+  return time.duration(time().diff(timeStamp)).asMinutes();
 };

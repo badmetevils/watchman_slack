@@ -8,7 +8,7 @@ export interface IUser {
 export interface IUserStatusLog {
   slackID: string;
   status: 'ACTIVE' | 'AWAY';
-  id: string;
+  id?: string;
   penaltyTimeStamp: string;
   createdAt?: string;
   updatedAt?: string;

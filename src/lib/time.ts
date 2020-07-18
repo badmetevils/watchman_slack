@@ -14,5 +14,4 @@ const timeZone = process.env.TIME_ZONE || 'Asia/Kolkata';
 const time: typeof moment = moment;
 
 time.tz.setDefault(timeZone);
-
 export default time;
