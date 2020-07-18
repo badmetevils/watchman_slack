@@ -2,7 +2,7 @@ import moment from 'moment-timezone';
 
 declare module 'moment' {
   interface Moment {
-    toMySqlDateTime: () => typeof moment;
+    toMySqlDateTime: () => string;
   }
 }
 

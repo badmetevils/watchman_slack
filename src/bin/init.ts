@@ -2,7 +2,7 @@ import logger from '@shared/Logger';
 import { watchmanRTM } from '@osl-slack-rtm-app';
 import { watchman } from '@osl-slack-bolt';
 import db from '@models/index';
-import Presence from '@bin/presence';
+import Presence from '@bin/Presence';
 import time from '@lib/time';
 
 export default class Init {

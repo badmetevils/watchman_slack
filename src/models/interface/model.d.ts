@@ -7,17 +7,20 @@ export interface IUser {
 
 export interface IUserStatusLog {
   slackID: string;
-  date: string;
   status: 'ACTIVE' | 'AWAY';
   id: string;
-  timestamp: string;
+  penaltyTimeStamp: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface IUserTimeLog {
   slackID: string;
-  date: string;
+  date?: string;
   awayInWorkingHours: number;
   awayInNonWorkingHours: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface IUserModel extends Model, IUser {}

@@ -1,5 +1,6 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import { IUserTimeLogModel } from './interface/model';
+import time from '@lib/time';
 
 const userTimeLogsModel = (db: Sequelize) =>
   db.define<IUserTimeLogModel>(
@@ -11,23 +12,33 @@ const userTimeLogsModel = (db: Sequelize) =>
         allowNull: false
       },
       date: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
+        field: 'date',
         allowNull: false,
-        field: 'date'
+        defaultValue: () => time().format('YYYY-MM-DD').toString()
       },
       awayInWorkingHours: {
-        type: DataTypes.TIME,
-        field: 'away_in_working_hours'
+        type: DataTypes.FLOAT,
+        field: 'away_in_working_hours',
+        defaultValue: 0,
+        set(valueToBeSet: number) {
+          return this.setDataValue('awayInWorkingHours', Math.round(valueToBeSet));
+        }
       },
       awayInNonWorkingHours: {
-        type: DataTypes.TIME,
-        field: 'away_in_non_working_hours'
+        type: DataTypes.FLOAT,
+        field: 'away_in_non_working_hours',
+        defaultValue: 0,
+        set(valueToBeSet: number) {
+          console.log({ v: valueToBeSet });
+          return this.setDataValue('awayInNonWorkingHours', Math.round(valueToBeSet));
+        }
       }
     },
     {
-      // freezeTableName: true,
-      timestamps: false,
-      tableName: 'user_time'
+      tableName: 'user_time',
+      createdAt: 'created_at',
+      updatedAt: 'updated_at'
     }
   );
 

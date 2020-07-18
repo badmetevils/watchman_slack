@@ -1,9 +1,10 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import { IUserStatusLogModel } from './interface/model';
+import time from '@lib/time';
 
 const userStatusLogModel = (db: Sequelize) =>
   db.define<IUserStatusLogModel>(
-    'user_time_logs',
+    'user_status_logs',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -16,14 +17,12 @@ const userStatusLogModel = (db: Sequelize) =>
         field: 'slack_id',
         allowNull: false
       },
-      date: {
+      penaltyTimeStamp: {
         type: DataTypes.DATE,
-        field: 'date',
-        defaultValue: DataTypes.NOW
-      },
-      timestamp: {
-        type: DataTypes.DATE,
-        field: 'timestamp'
+        field: 'penalty_time_stamp',
+        get() {
+          return time(this.getDataValue('penaltyTimeStamp')).toMySqlDateTime();
+        }
       },
       status: {
         type: DataTypes.ENUM,
@@ -33,8 +32,10 @@ const userStatusLogModel = (db: Sequelize) =>
     },
     {
       // freezeTableName: true,
-      timestamps: false,
-      tableName: 'user_time_logs'
+      // timestamps: false,
+      tableName: 'user_status_logs',
+      createdAt: 'created_at',
+      updatedAt: 'updated_at'
     }
   );
 
