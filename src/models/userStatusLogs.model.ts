@@ -17,11 +17,17 @@ const userStatusLogModel = (db: Sequelize) =>
         field: 'slack_id',
         allowNull: false
       },
-      penaltyTimeStamp: {
+      date: {
+        type: DataTypes.DATEONLY,
+        field: 'date',
+        allowNull: false,
+        defaultValue: () => time().format('YYYY-MM-DD').toString()
+      },
+      timestamp: {
         type: DataTypes.DATE,
-        field: 'penalty_time_stamp',
+        field: 'timestamp',
         get() {
-          return time(this.getDataValue('penaltyTimeStamp')).toMySqlDateTime();
+          return time(this.getDataValue('timestamp')).toMySqlDateTime();
         }
       },
       status: {

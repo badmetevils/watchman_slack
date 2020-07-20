@@ -1,47 +1,17 @@
-import TimeSheet from './TimeSheet';
-import time from '@lib/time';
-import { IUserStatusLogModel } from '@models/interface/model';
-import { isWorkingHours, minutesFromNow } from '@shared/utils';
-import { IPresenceData } from '@typing/presence';
-import { getMostRecentAwayStatusById } from '@models/queries';
-
-export default class ActiveStatus {
-  user: IPresenceData;
-  constructor(user: IPresenceData) {
-    this.user = user;
-  }
-
-  async findAndUpdate() {
-    let userFromDb = await getMostRecentAwayStatusById(this.user.slackID);
-    if (Array.isArray(userFromDb) && userFromDb.length != 0) {
-      let user: IUserStatusLogModel = userFromDb[0].get();
-      await this.updateStatusByWorkHours(user);
-    }
-  }
-
-  private async updateStatusByWorkHours(user: IUserStatusLogModel) {
-    let lastAwayTS = time(user.penaltyTimeStamp);
-    let minDiff = minutesFromNow(lastAwayTS);
-
-    const isAwayTSInWorkingHour = isWorkingHours(lastAwayTS.toMySqlDateTime());
-    const isCurrentTSInWorkingHour = isWorkingHours();
-
-    let timeSheet = new TimeSheet(minDiff, user);
-
-    if (isAwayTSInWorkingHour && isAwayTSInWorkingHour) {
-      timeSheet.activeAwayWH();
-    }
-
-    if (!(isAwayTSInWorkingHour && isCurrentTSInWorkingHour)) {
-      timeSheet.activeAwayNWH();
-    }
-
-    if (isAwayTSInWorkingHour === true && isCurrentTSInWorkingHour === false) {
-      timeSheet.activeNWHAwayWH();
-    }
-
-    if (isAwayTSInWorkingHour === false && isCurrentTSInWorkingHour === true) {
-      timeSheet.activeWHAwayNWH();
-    }
-  }
-}
+/**
+ *  if  ACT_TS in wh
+ *       find LAST_AW_TS
+ *            if LAST_AW_TS  in wh
+ *                  away_time_wh =  LAST_AW_TS to ACT_TS
+ *            is LAST_AW_TS in nh1
+ *                  away_time_wh = start_time to ACT_TS
+ *
+ * if ACT_TS in NWH
+ *       if ACT_TS in NH1  log them
+ *        is ACT_TS in NH2
+ *            LAST_AW_TS  IN NH1
+ *                    AWAY_TIME_WH = START TO END
+ *             LAST_AW_TS IN WH
+ *                     AWAY_TIME_WH = LAST_AW TO END
+ *
+ */

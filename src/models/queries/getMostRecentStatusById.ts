@@ -1,19 +1,26 @@
 import db from '..';
 import logger from '@shared/Logger';
 import { IUserStatusLogModel } from '@models/interface/model';
+import time from '@lib/time';
 
 /**
  *Return  promise containing  most recent log status of user by slackID
  *
- * @param {string} slackID
+ * @param {string} slackID : user slack ID
+ * @param { 'ACTIVE' | 'AWAY'} status : user status active and away
  * @returns {(Promise<IUserStatusLogModel[] | undefined>)}
  */
-const getMostRecentAwayStatusById = async (slackID: string): Promise<IUserStatusLogModel[] | undefined> => {
+const getMostRecentStatusById = async (
+  slackID: string,
+  status: 'ACTIVE' | 'AWAY'
+): Promise<IUserStatusLogModel[] | undefined> => {
   try {
     return await db.table.userStatusLogs.findAll({
       limit: 1,
       where: {
-        slackID: slackID
+        slackID: slackID,
+        status,
+        date: time().format('YYYY-MM-DD').toString()
       },
       order: [['created_at', 'DESC']]
     });
@@ -22,4 +29,4 @@ const getMostRecentAwayStatusById = async (slackID: string): Promise<IUserStatus
   }
 };
 
-export default getMostRecentAwayStatusById;
+export default getMostRecentStatusById;

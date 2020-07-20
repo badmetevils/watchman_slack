@@ -25,13 +25,12 @@ const userTimeLogsModel = (db: Sequelize) =>
           return this.setDataValue('awayInWorkingHours', Math.round(valueToBeSet));
         }
       },
-      awayInNonWorkingHours: {
+      activeInNonWorkingHours: {
         type: DataTypes.FLOAT,
-        field: 'away_in_non_working_hours',
+        field: 'active_in_non_working_hours',
         defaultValue: 0,
         set(valueToBeSet: number) {
-          console.log({ v: valueToBeSet });
-          return this.setDataValue('awayInNonWorkingHours', Math.round(valueToBeSet));
+          return this.setDataValue('activeInNonWorkingHours', Math.round(valueToBeSet));
         }
       }
     },
