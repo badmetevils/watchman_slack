@@ -26,8 +26,8 @@ export default class AwayStatus {
        *     find last active
        *             if  last active is from wh
        *                     active_time_nh =  endtime to current away_ts
-       *              if recent_away  in nh
-       *                    active_time_nh =  recent to current_away
+       *              if recent_away  in nh1
+       *                    active_time_nh =  recent_away to start + end to current away
        * */
     }
   }
