@@ -1,4 +1,5 @@
 import getMostRecentStatusById from './getMostRecentStatusById';
 import getTimeLogBySlackIDByDate from './getTimeLogBySlackIDByDate';
+import addUserStatusLog from './addUserStatusLog';
 
-export { getMostRecentStatusById, getTimeLogBySlackIDByDate };
+export { getMostRecentStatusById, getTimeLogBySlackIDByDate, addUserStatusLog };

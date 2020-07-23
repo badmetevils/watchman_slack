@@ -1,12 +1,14 @@
 import { IPresenceData } from '@typing/presence';
 import time from '@lib/time';
-import { getMostRecentStatusById } from '@models/queries';
-import { durationFromTimestampInMinutes, isWorkingHours } from '@shared/utils';
+import { getMostRecentStatusById, addUserStatusLog } from '@models/queries';
+import { durationFromTimestampInMinutes, isWorkingHours, getMinutesWhenAway } from '@shared/utils';
 import logger from '@shared/Logger';
+import { Moment } from 'moment';
+import { IUserStatusLog } from '@models/interface/model';
 
 export default class AwayStatus {
-  user: IPresenceData;
-  penalty: number;
+  private user: IPresenceData;
+  private penalty: number;
 
   constructor(user: IPresenceData) {
     this.user = user;
@@ -14,25 +16,45 @@ export default class AwayStatus {
   }
 
   async log() {
-    let timestamp = await this.getTimeStampForLogging();
-    if (isWorkingHours(timestamp)) {
-      // check last active status for today if found  :  recent_active_ts [is from nh1] to start_wh  add then to active non wh for today
-      // if no recent active status found  just log them
-    } else {
-      /**
-       *  if   AWAY_NH1
-       *        find last active   then active_nh =  last recent _active to current away
-       * if AWAY_NH2
-       *     find last active
-       *             if  last active is from wh
-       *                     active_time_nh =  endtime to current away_ts
-       *              if recent_away  in nh1
-       *                    active_time_nh =  recent_away to start + end to current away
-       * */
+    let timestamp = await this.getPenaltyTimeStamp();
+    if (!!timestamp) {
+      let record = await addUserStatusLog({
+        slackID: this.user.slackID,
+        status: this.user.status,
+        timestamp
+      });
+      if (Array.isArray(record)) {
+        logger.info(`A new entry created for ${record.getDataValue('slackID')} at table "${record.constructor.name}" `);
+      }
     }
   }
 
-  private async getTimeStampForLogging(): Promise<string | undefined> {
+  async updateTimeSheet() {
+    let lastActiveTimestamp: Moment | undefined = await this.getLastActive();
+
+    if (!!lastActiveTimestamp) {
+      console.log('==========AWAY=========');
+      let timeToLog = getMinutesWhenAway(lastActiveTimestamp);
+      console.log({
+        lastActiveAt: lastActiveTimestamp.toMySqlDateTime().toString(),
+        timeToLog
+      });
+    }
+  }
+
+  private async getLastActive(): Promise<Moment | undefined> {
+    try {
+      let lastActiveRecord = await getMostRecentStatusById(this.user.slackID, 'ACTIVE');
+      if (Array.isArray(lastActiveRecord) && lastActiveRecord.length !== 0) {
+        let recentActiveTimestamp = time(lastActiveRecord[0].timestamp);
+        return recentActiveTimestamp;
+      }
+    } catch (error) {
+      logger.error(error);
+    }
+  }
+
+  private async getPenaltyTimeStamp(): Promise<string | undefined> {
     let timestamp = time().subtract(this.penalty, 'seconds').toMySqlDateTime().toString();
     try {
       let lastAwayRecord = await getMostRecentStatusById(this.user.slackID, 'AWAY');
