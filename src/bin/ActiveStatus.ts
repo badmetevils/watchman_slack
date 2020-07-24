@@ -1,10 +1,10 @@
-import { getMinutesWhenActive } from './../shared/utils';
+import { getMinutesWhenActive } from '@shared/utils';
 import { IPresenceData } from '@typing/presence';
 import time from '@lib/time';
 import { getMostRecentStatusById, addUserStatusLog } from '@models/queries';
-import { getMinutesWhenAway } from '@shared/utils';
 import logger from '@shared/Logger';
 import { Moment } from 'moment';
+import TimeSheet from '@bin/TimeSheet';
 
 export default class ActiveStatus {
   private user: IPresenceData;
@@ -33,6 +33,8 @@ export default class ActiveStatus {
     if (!!lastAwayTimeStamp) {
       console.log('==========ACTIVE=========');
       let timeToLog = getMinutesWhenActive(lastAwayTimeStamp);
+      let timeSheet = new TimeSheet(timeToLog, this.user);
+      await timeSheet.log();
       console.log({
         lastAwayAt: lastAwayTimeStamp.toMySqlDateTime().toString(),
         timeToLog

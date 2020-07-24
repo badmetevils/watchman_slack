@@ -83,7 +83,8 @@ export const getMinutesWhenActive = (lastAwayTimeStamp: Moment): IActiveAwayMinu
 
     // if away in NWH1
     if (_lastAwayHours > _endHours) {
-      activeInNonWorkingHours = _totalTimeElapsed;
+      // activeInNonWorkingHours = _totalTimeElapsed;
+      activeInNonWorkingHours = 0;
       awayInWorkingHours = 0;
       return { activeInNonWorkingHours, awayInWorkingHours };
     }
