@@ -23,7 +23,7 @@ export default class AwayStatus {
         status: this.user.status,
         timestamp
       });
-      if (Array.isArray(record)) {
+      if (!!record) {
         logger.info(`A new entry created for ${record.getDataValue('slackID')} at table "${record.constructor.name}" `);
       }
     }
