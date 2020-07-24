@@ -15,7 +15,7 @@ export const isWorkingHours = (timeStamp: string | undefined | null = null): boo
 };
 
 export const durationFromTimestampInMinutes = (timeStamp: Moment) => {
-  return time.duration(time().diff(timeStamp)).asMinutes();
+  return time.duration(time().diff(timeStamp)).abs().asMinutes();
 };
 
 export const getMinutesWhenActive = (lastAwayTimeStamp: Moment): IActiveAwayMinutes => {
@@ -25,15 +25,22 @@ export const getMinutesWhenActive = (lastAwayTimeStamp: Moment): IActiveAwayMinu
   let now = time().clone();
   let _startHours = parseFloat(process.env.WORK_HOUR_START || '10');
   let _endHours = parseFloat(process.env.WORK_HOUR_ENDS || '19');
-  let _totalTimeElapsed = time.duration(now.diff(lastAwayTimeStamp)).asMinutes();
+  let _totalTimeElapsed = time.duration(now.diff(lastAwayTimeStamp)).abs().asMinutes();
 
-  let _currentHour = time.duration(now.format('H:mm').toString()).asHours();
-  let _lastAwayHours = time.duration(lastAwayTimeStamp.format('H:mm').toString()).asHours();
+  let _currentHour = time.duration(now.format('H:mm').toString()).abs().asHours();
+  let _lastAwayHours = time.duration(lastAwayTimeStamp.format('H:mm').toString()).abs().asHours();
 
   let _today12 = time().startOf('day');
   let _startWorkTime = _today12.clone().add(_startHours, 'hour');
   let _endWorkTime = _today12.clone().add(_endHours, 'hour');
-
+  // console.log({
+  //   away: {
+  //     _totalTimeElapsed: _totalTimeElapsed,
+  //     _startWorkTime: _startWorkTime.format('h:mm').toString(),
+  //     _endWorkTime: _endWorkTime.format('h:mm').toString(),
+  //     _lastAway: lastAwayTimeStamp.format('h:mm').toString()
+  //   }
+  // });
   /**
    *  USER ACTIVE IN  NON-WORK HOUR  1 [before _startHours ]
    */
@@ -51,7 +58,7 @@ export const getMinutesWhenActive = (lastAwayTimeStamp: Moment): IActiveAwayMinu
   if (_currentHour >= _startHours && _currentHour <= _endHours) {
     if (_lastAwayHours < _startHours) {
       activeInNonWorkingHours = 0;
-      awayInWorkingHours = _totalTimeElapsed - time.duration(now.diff(_startWorkTime)).asMinutes();
+      awayInWorkingHours = time.duration(now.diff(_startWorkTime)).abs().asMinutes();
       return { activeInNonWorkingHours, awayInWorkingHours };
     }
 
@@ -76,7 +83,7 @@ export const getMinutesWhenActive = (lastAwayTimeStamp: Moment): IActiveAwayMinu
 
     // if away in WH
     if (_lastAwayHours >= _startHours && _lastAwayHours <= _endHours) {
-      awayInWorkingHours = _totalTimeElapsed - time.duration(now.diff(_endWorkTime)).asMinutes();
+      awayInWorkingHours = _totalTimeElapsed - time.duration(now.diff(_endWorkTime)).abs().asMinutes();
       activeInNonWorkingHours = 0;
       return { activeInNonWorkingHours, awayInWorkingHours };
     }
@@ -99,14 +106,23 @@ export const getMinutesWhenAway = (lastActiveTimeStamp: Moment): IActiveAwayMinu
   let now = time().clone();
   let _startHours: number = parseFloat(process.env.WORK_HOUR_START || '10');
   let _endHours: number = parseFloat(process.env.WORK_HOUR_ENDS || '19');
-  let _totalTimeElapsed = time.duration(now.diff(lastActiveTimeStamp)).asMinutes();
+  let _totalTimeElapsed = time.duration(now.diff(lastActiveTimeStamp)).abs().asMinutes();
 
-  let _currentHour: number = time.duration(now.format('H:mm').toString()).asHours();
-  let _lastActiveHours: number = time.duration(lastActiveTimeStamp.format('H:mm').toString()).asHours();
+  let _currentHour: number = time.duration(now.format('H:mm').toString()).abs().asHours();
+  let _lastActiveHours: number = time.duration(lastActiveTimeStamp.format('H:mm').toString()).abs().asHours();
 
   let _today12 = time().startOf('day');
   let _startWorkTime = _today12.clone().add(_startHours, 'hour');
   let _endWorkTime = _today12.clone().add(_endHours, 'hour');
+
+  console.log({
+    active: {
+      _totalTimeElapsed: _totalTimeElapsed,
+      _startWorkTime: _startWorkTime.format('h:mm').toString(),
+      _endWorkTime: _endWorkTime.format('h:mm').toString(),
+      _lastActive: lastActiveTimeStamp.format('h:mm').toString()
+    }
+  });
 
   /**
    *  USER AWAY IN  NON-WORK HOUR  1 [before _startHours ]
@@ -125,7 +141,7 @@ export const getMinutesWhenAway = (lastActiveTimeStamp: Moment): IActiveAwayMinu
   if (_currentHour >= _startHours && _currentHour <= _endHours) {
     // Last time active was  before  _todayStartTime
     if (_lastActiveHours < _startHours) {
-      activeInNonWorkingHours = time.duration(lastActiveTimeStamp.diff(_startWorkTime)).asMinutes();
+      activeInNonWorkingHours = time.duration(lastActiveTimeStamp.diff(_startWorkTime)).abs().asMinutes();
       awayInWorkingHours = 0;
       return { activeInNonWorkingHours, awayInWorkingHours };
     }
@@ -145,8 +161,8 @@ export const getMinutesWhenAway = (lastActiveTimeStamp: Moment): IActiveAwayMinu
     // active in NWH1
     if (_lastActiveHours < _startHours) {
       activeInNonWorkingHours =
-        time.duration(lastActiveTimeStamp.diff(_startWorkTime)).asMinutes() +
-        time.duration(lastActiveTimeStamp.diff(_endWorkTime)).asMinutes();
+        time.duration(lastActiveTimeStamp.diff(_startWorkTime)).abs().asMinutes() +
+        time.duration(now.diff(_endWorkTime)).abs().asMinutes();
       awayInWorkingHours = 0;
       return { activeInNonWorkingHours, awayInWorkingHours };
     }
@@ -154,7 +170,7 @@ export const getMinutesWhenAway = (lastActiveTimeStamp: Moment): IActiveAwayMinu
     // if active in WH
     if (_lastActiveHours >= _startHours && _lastActiveHours <= _endHours) {
       awayInWorkingHours = 0;
-      activeInNonWorkingHours = time.duration(now.diff(_endWorkTime)).asMinutes();
+      activeInNonWorkingHours = time.duration(now.diff(_endWorkTime)).abs().asMinutes();
       return { activeInNonWorkingHours, awayInWorkingHours };
     }
 

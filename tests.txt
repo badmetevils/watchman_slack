@@ -1,0 +1,28 @@
+## WHEN USER ACTIVE
+IN NH2
+- LAST AWAY IN WH : working fine
+- LAST AWAY IN NH!: working fine
+- LAST AWAY IN NH2:  working fine
+
+IN WH [20.5 to 23.5]
+- LAST AWAY IN NH1:  Working fine
+- LAST  AWAY IN WH : Working fine
+
+IN NH1 [ 23 to 23.5]
+- LAST AWAY IN NH1: Working fine
+
+## WHEN USER IS AWAY
+
+IN NH1 [ 23 to 23.5]
+- LAST ACTIVE IN NH1 :  Working fine
+
+IN WH [21 to 23.5]
+- LAST ACTIVE IN NH1 :  Working fine
+- LAST ACTIVE IN WH :  Working fine
+
+IN NH2 [10 to 19]
+- LAST ACTIVE IN NH1 : Working fine
+- LAST ACTIVE IN WH : Working fine
+- LAST ACTIVE IN NH2:  Working fine
+
+
