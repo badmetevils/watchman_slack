@@ -2,6 +2,7 @@ import { WebAPICallResult } from '@slack/web-api';
 import logger from '@shared/Logger';
 import { watchman } from '@osl-slack-bolt';
 import getUserList from './GetUserList';
+import { IPresenceData } from '@typing/presence';
 
 interface ICheckAwayStatus extends WebAPICallResult {
   presence?: 'active' | 'away';
@@ -10,10 +11,12 @@ interface ICheckAwayStatus extends WebAPICallResult {
   manual_away?: false;
   connection_count?: number;
   last_activity?: number;
+  id?: string;
+  name?: string;
 }
 
-class CheckAwayStatus {
-  private response: ICheckAwayStatus[] = [];
+export class CheckAwayStatus {
+  private response: IPresenceData[] = [];
 
   /**
    * @todo
@@ -21,16 +24,16 @@ class CheckAwayStatus {
    * priority : lowest
    */
 
-  async allMembers(): Promise<ICheckAwayStatus[] | undefined> {
+  async allMembers(): Promise<IPresenceData[] | undefined> {
     try {
       const list = (await getUserList()) || [];
-      for (let { id, real_name, name } of list) {
+      for (let { id } of list) {
         let status = await this.bySlackId(id);
-        if (status.ok) {
+        if (status?.ok) {
+          let s = status.presence === 'active' ? ('ACTIVE' as 'ACTIVE') : ('AWAY' as 'AWAY');
           this.response.push({
-            ...status,
-            name,
-            real_name
+            slackID: id,
+            status: s
           });
         }
       }
@@ -40,11 +43,15 @@ class CheckAwayStatus {
     }
   }
 
-  async bySlackId(id: string): Promise<ICheckAwayStatus> {
-    return await watchman.client.users.getPresence({
-      token: process.env.LEGACY_SLACK_USER_TOKEN,
-      user: id
-    });
+  async bySlackId(id: string): Promise<ICheckAwayStatus | undefined> {
+    try {
+      return await watchman.client.users.getPresence({
+        token: process.env.LEGACY_SLACK_BOT_TOKEN,
+        user: id
+      });
+    } catch (error) {
+      logger.error(`An error occurred when checking status via Bolt `);
+    }
   }
 }
 

@@ -25,7 +25,6 @@ export default class TeamJoined {
         }
         let presence = new Presence();
         await presence.subscribe();
-        // await presence.listen();
       } else {
         logger.info(`A new bot ${real_name} added to the team`);
       }

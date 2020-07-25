@@ -3,8 +3,8 @@ import { watchmanRTM } from '@osl-slack-rtm-app';
 import { watchman } from '@osl-slack-bolt';
 import db from '@models/index';
 import Presence from '@bin/Presence';
-import time from '@lib/time';
 import TeamJoined from '@watchman-rtm/TeamJoined';
+import runCronTask from './cron';
 
 export default class Init {
   async connect() {
@@ -19,6 +19,7 @@ export default class Init {
     await presence.listen();
     let newMember = new TeamJoined();
     newMember.join();
+    runCronTask();
   }
 
   private async DatabaseConnect() {
