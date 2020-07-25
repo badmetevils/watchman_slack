@@ -5,12 +5,14 @@ import db from '@models/index';
 import Presence from '@bin/Presence';
 import TeamJoined from '@watchman-rtm/TeamJoined';
 import runCronTask from './cron';
+import ExpressServer from '@express-app/Server';
 
 export default class Init {
   async connect() {
     await this.DatabaseConnect();
     await this.BoltConnect();
     await this.RTMConnect();
+    this.APIServer();
   }
 
   async start() {
@@ -49,5 +51,12 @@ export default class Init {
     } catch (error) {
       logger.error(error);
     }
+  }
+
+  private APIServer() {
+    const port = Number(process.env.EXPRESS_PORT || 3000);
+    ExpressServer.listen(port, () => {
+      console.log(`😆 API Server is running on ${port}`);
+    });
   }
 }

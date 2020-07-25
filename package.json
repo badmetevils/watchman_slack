@@ -20,12 +20,16 @@
   },
   "_moduleAliases": {
     "@shared": "dist/shared",
-    "@osl-slack-bolt": "dist/app",
+    "@osl-slack-bolt": "dist/bolt",
     "@osl-slack-rtm-app": "dist/rtm",
+    "@osl-slack-web-app": "dist/web",
+    "@bin": "dist/bin",
+    "@lib": "dist/lib",
     "@watchman-hooks": "dist/webhooks",
-    "@watchman-rtm": "dist/rtm",
     "@typing": "dist/typings",
-    "@osl-slack-web-app": "dist/web"
+    "@watchman-rtm": "dist/rtm",
+    "@models": "dist/models",
+    "@express-app": "dist/api"
   },
   "dependencies": {
     "@slack/bolt": "^2.1.1",
@@ -38,9 +42,19 @@
     "moment-timezone": "^0.5.31",
     "mysql2": "^2.1.0",
     "node-cron": "^2.0.3",
-    "sequelize": "^6.3.3"
+    "sequelize": "^6.3.3",
+    "cookie-parser": "^1.4.5",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "helmet": "^3.23.3",
+    "http-status-codes": "^1.4.0",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.2",
+    "@types/express": "^4.17.7",
+    "@types/helmet": "0.0.47",
+    "@types/morgan": "^1.9.1",
     "@types/command-line-args": "^5.0.0",
     "@types/node": "^14.0.20",
     "@types/node-cron": "^2.0.3",

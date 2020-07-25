@@ -22,7 +22,8 @@
       "@watchman-hooks/*": ["src/webhooks/*"],
       "@typing/*": ["src/typings/*"],
       "@watchman-rtm/*": ["src/rtm/*"],
-      "@models/*": ["src/models/*"]
+      "@models/*": ["src/models/*"],
+      "@express-app/*": ["src/api/*"]
     },
     "types": ["node"],
     "typeRoots": ["node_modules/@types", "src/typings"]
