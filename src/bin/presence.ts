@@ -2,12 +2,12 @@ import ListenPresenceChange from '@watchman-rtm/ListenPresenceChange';
 import SubscribePresence from '@watchman-rtm/SubscribePresence';
 
 export default class Presence {
-  public listen() {
+  public async listen() {
     let listen = new ListenPresenceChange();
-    listen.listen();
+    await listen.listen();
   }
-  public subscribe() {
+  public async subscribe() {
     let subscribe = new SubscribePresence();
-    subscribe.allSlackUsers();
+    await subscribe.allSlackUsers();
   }
 }

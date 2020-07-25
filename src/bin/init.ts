@@ -4,6 +4,7 @@ import { watchman } from '@osl-slack-bolt';
 import db from '@models/index';
 import Presence from '@bin/Presence';
 import time from '@lib/time';
+import TeamJoined from '@watchman-rtm/TeamJoined';
 
 export default class Init {
   async connect() {
@@ -14,8 +15,10 @@ export default class Init {
 
   async start() {
     let presence = new Presence();
-    presence.subscribe();
-    presence.listen();
+    await presence.subscribe();
+    await presence.listen();
+    let newMember = new TeamJoined();
+    newMember.join();
   }
 
   private async DatabaseConnect() {

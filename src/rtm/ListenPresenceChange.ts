@@ -4,7 +4,7 @@ import AwayStatus from '@bin/AwayStatus';
 import ActiveStatus from '@bin/ActiveStatus';
 
 export default class ListenPresenceChange {
-  public listen() {
+  public async listen() {
     watchmanRTM.on('presence_change', async ({ user, presence }) => {
       let data: IPresenceData = {
         slackID: user,

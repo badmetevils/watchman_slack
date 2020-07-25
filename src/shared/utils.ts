@@ -115,14 +115,14 @@ export const getMinutesWhenAway = (lastActiveTimeStamp: Moment): IActiveAwayMinu
   let _startWorkTime = _today12.clone().add(_startHours, 'hour');
   let _endWorkTime = _today12.clone().add(_endHours, 'hour');
 
-  console.log({
-    active: {
-      _totalTimeElapsed: _totalTimeElapsed,
-      _startWorkTime: _startWorkTime.format('h:mm').toString(),
-      _endWorkTime: _endWorkTime.format('h:mm').toString(),
-      _lastActive: lastActiveTimeStamp.format('h:mm').toString()
-    }
-  });
+  // console.log({
+  //   active: {
+  //     _totalTimeElapsed: _totalTimeElapsed,
+  //     _startWorkTime: _startWorkTime.format('h:mm').toString(),
+  //     _endWorkTime: _endWorkTime.format('h:mm').toString(),
+  //     _lastActive: lastActiveTimeStamp.format('h:mm').toString()
+  //   }
+  // });
 
   /**
    *  USER AWAY IN  NON-WORK HOUR  1 [before _startHours ]
