@@ -26,7 +26,7 @@ export default class Init {
 
   private async DatabaseConnect() {
     try {
-      let response = await db.sequelize.sync({ force: true });
+      let response = await db.sequelize.sync({ force: false });
       console.log('🆒 Database is connected and working fine');
     } catch (error) {
       console.log('😨 Database is not reachable');

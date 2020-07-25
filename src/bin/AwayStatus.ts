@@ -33,14 +33,14 @@ export default class AwayStatus {
     let lastActiveTimestamp: Moment | undefined = await this.getLastActive();
 
     if (!!lastActiveTimestamp) {
-      console.log('==========AWAY=========');
+      // console.log('==========AWAY=========');
       let timeToLog = getMinutesWhenAway(lastActiveTimestamp);
       let timeSheet = new TimeSheet(timeToLog, this.user);
       await timeSheet.log();
-      console.log({
-        lastActiveAt: lastActiveTimestamp.toMySqlDateTime().toString(),
-        timeToLog
-      });
+      // console.log({
+      //   lastActiveAt: lastActiveTimestamp.toMySqlDateTime().toString(),
+      //   timeToLog
+      // });
     }
   }
 

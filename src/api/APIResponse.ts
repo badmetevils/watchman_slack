@@ -1,32 +1,25 @@
 interface IResponseSuccess {
   status: 'SUCCESS';
   data: any;
-  error: false;
+  // error: false;
 }
 interface IResponseError {
   status: 'FAILURE';
-  error: true;
-  errorMessage: string;
+  // error: true;
+  message: string;
 }
 type IResponse = IResponseSuccess | IResponseError;
 
-interface IArgs {
-  data?: any;
-  errorMessage?: any;
-}
-
-const APIResponse = (args: IArgs): IResponse => {
+const APIResponse = (args: IResponse): IResponse => {
   if (args.status == 'SUCCESS') {
     return {
-      data,
-      status,
-      error: false
+      data: args.data,
+      status: 'SUCCESS'
     };
   }
   return {
-    error: true,
-    status,
-    errorMessage
+    status: 'FAILURE',
+    message: args.message
   };
 };
 export default APIResponse;
