@@ -2,7 +2,8 @@
   "name": "watchman",
   "version": "1.0.0",
   "description": "A Slack app with RTM and WebAPI integration along with API with express",
-  "license": "Private",
+  "license": "MIT",
+  "author": "Tanuj Sharma",
   "scripts": {
     "build": "node build.js",
     "lint": "tslint --project \"tsconfig.json\"",
@@ -34,9 +35,9 @@
     "@express-app": "dist/api"
   },
   "dependencies": {
-    "@slack/bolt": "^2.1.1",
-    "@slack/rtm-api": "^5.0.5",
-    "@slack/web-api": "^5.10.0",
+    "@slack/bolt": "2.1.1",
+    "@slack/rtm-api": "5.0.5",
+    "@slack/web-api": "5.10.0",
     "@types/validator": "^13.1.0",
     "command-line-args": "^5.1.1",
     "cookie-parser": "^1.4.5",

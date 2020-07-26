@@ -27,9 +27,9 @@ export default class Init {
   private async DatabaseConnect() {
     try {
       const response = await db.sequelize.sync({ force: false });
-      console.log('🆒 Database is connected and working fine');
+      console.log('🛹  Database is connected and working fine');
     } catch (error) {
-      console.log('😨 Database is not reachable');
+      console.log('🤷‍♂️  Database is not reachable');
       logger.error(error);
     }
   }
@@ -37,9 +37,9 @@ export default class Init {
   private async RTMConnect() {
     try {
       const { self, team } = await watchmanRTM.start();
-      console.log('🤠 Listening  to the RTM events ');
+      console.log(`🚀  Listening  to the RTM events`);
     } catch (error) {
-      console.log('☹️ Unable to connect with  RTM events ');
+      console.log(`😫  Unable to connect with  RTM events `);
       logger.error(error);
     }
   }
@@ -48,9 +48,9 @@ export default class Init {
     try {
       const port = Number(process.env.PORT || 3000);
       await watchman.start(port);
-      console.log(`⚡️ Bolt app is running! port ${port}`);
+      console.log(`⚡  Bolt app is running! port ${port}`);
     } catch (error) {
-      console.log('😤 Unable to connect to slack via Bolt');
+      console.log(`😵  Unable to connect to slack via Bolt`);
       logger.error(error);
     }
   }
@@ -58,7 +58,7 @@ export default class Init {
   private APIServer() {
     const port = Number(process.env.EXPRESS_PORT || 3000);
     ExpressServer.listen(port, () => {
-      console.log(`😆 API Server is running on ${port}`);
+      console.log(`🧪  API Server is running on ${port}`);
     });
   }
 }
