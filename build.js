@@ -7,9 +7,10 @@ try {
   // Transpile the typescript files
   const proc = childProcess.exec('tsc --build tsconfig.prod.json');
   proc.on('close', code => {
-    console.log(code);
     if (code !== 0) {
-      throw Error('Build failed');
+      throw Error(' 🍊Build failed');
+    } else {
+      console.log('🤝Build finished !!');
     }
   });
 } catch (err) {

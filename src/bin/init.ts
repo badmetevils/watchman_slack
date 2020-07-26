@@ -30,8 +30,7 @@ export default class Init {
       console.log('🆒 Database is connected and working fine');
     } catch (error) {
       console.log('😨 Database is not reachable');
-      console.log(error);
-      logger.log('error', error);
+      logger.error(error);
     }
   }
 
@@ -40,6 +39,7 @@ export default class Init {
       const { self, team } = await watchmanRTM.start();
       console.log('🤠 Listening  to the RTM events ');
     } catch (error) {
+      console.log('☹️ Unable to connect with  RTM events ');
       logger.error(error);
     }
   }
@@ -50,6 +50,7 @@ export default class Init {
       await watchman.start(port);
       console.log(`⚡️ Bolt app is running! port ${port}`);
     } catch (error) {
+      console.log('😤 Unable to connect to slack via Bolt');
       logger.error(error);
     }
   }
