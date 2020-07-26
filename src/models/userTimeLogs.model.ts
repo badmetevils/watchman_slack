@@ -4,7 +4,7 @@ import time from '@lib/time';
 import userModel from './users.model';
 
 const userTimeLogsModel = (db: Sequelize) => {
-  let timeLogs = db.define<IUserTimeLogModel>(
+  const timeLogs = db.define<IUserTimeLogModel>(
     'user_time',
     {
       id: {

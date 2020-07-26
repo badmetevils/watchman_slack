@@ -27,7 +27,7 @@ const getTimeLogByISlackIDAndDateRange = async (
       }
     };
     if (!!slackID) {
-      //@ts-ignore
+      // @ts-ignore
       where.slackID = slackID;
     }
     return await db.table.userTimeLogs.findAll({

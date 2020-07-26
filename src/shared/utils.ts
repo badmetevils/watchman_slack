@@ -3,10 +3,10 @@ import time from '@lib/time';
 import { IActiveAwayMinutes } from '@typing/presence';
 
 export const isWorkingHours = (timeStamp: string | undefined | null = null): boolean => {
-  let hour = !!timeStamp ? time(timeStamp).hour() : time().hour();
+  const hour = !!timeStamp ? time(timeStamp).hour() : time().hour();
 
-  let start = parseInt(process.env.WORK_HOUR_START || '10');
-  let end = parseInt(process.env.WORK_HOUR_ENDS || '19');
+  const start = parseInt(process.env.WORK_HOUR_START || '10');
+  const end = parseInt(process.env.WORK_HOUR_ENDS || '19');
 
   if (hour >= start && hour < end) {
     return true;
@@ -22,17 +22,17 @@ export const getMinutesWhenActive = (lastAwayTimeStamp: Moment): IActiveAwayMinu
   let activeInNonWorkingHours: number = 0;
   let awayInWorkingHours: number = 0;
 
-  let now = time().clone();
-  let _startHours = parseFloat(process.env.WORK_HOUR_START || '10');
-  let _endHours = parseFloat(process.env.WORK_HOUR_ENDS || '19');
-  let _totalTimeElapsed = time.duration(now.diff(lastAwayTimeStamp)).abs().asMinutes();
+  const now = time().clone();
+  const _startHours = parseFloat(process.env.WORK_HOUR_START || '10');
+  const _endHours = parseFloat(process.env.WORK_HOUR_ENDS || '19');
+  const _totalTimeElapsed = time.duration(now.diff(lastAwayTimeStamp)).abs().asMinutes();
 
-  let _currentHour = time.duration(now.format('H:mm').toString()).abs().asHours();
-  let _lastAwayHours = time.duration(lastAwayTimeStamp.format('H:mm').toString()).abs().asHours();
+  const _currentHour = time.duration(now.format('H:mm').toString()).abs().asHours();
+  const _lastAwayHours = time.duration(lastAwayTimeStamp.format('H:mm').toString()).abs().asHours();
 
-  let _today12 = time().startOf('day');
-  let _startWorkTime = _today12.clone().add(_startHours, 'hour');
-  let _endWorkTime = _today12.clone().add(_endHours, 'hour');
+  const _today12 = time().startOf('day');
+  const _startWorkTime = _today12.clone().add(_startHours, 'hour');
+  const _endWorkTime = _today12.clone().add(_endHours, 'hour');
   // console.log({
   //   away: {
   //     _totalTimeElapsed: _totalTimeElapsed,
@@ -103,17 +103,17 @@ export const getMinutesWhenAway = (lastActiveTimeStamp: Moment): IActiveAwayMinu
   let activeInNonWorkingHours: number = 0;
   let awayInWorkingHours: number = 0;
 
-  let now = time().clone();
-  let _startHours: number = parseFloat(process.env.WORK_HOUR_START || '10');
-  let _endHours: number = parseFloat(process.env.WORK_HOUR_ENDS || '19');
-  let _totalTimeElapsed = time.duration(now.diff(lastActiveTimeStamp)).abs().asMinutes();
+  const now = time().clone();
+  const _startHours: number = parseFloat(process.env.WORK_HOUR_START || '10');
+  const _endHours: number = parseFloat(process.env.WORK_HOUR_ENDS || '19');
+  const _totalTimeElapsed = time.duration(now.diff(lastActiveTimeStamp)).abs().asMinutes();
 
-  let _currentHour: number = time.duration(now.format('H:mm').toString()).abs().asHours();
-  let _lastActiveHours: number = time.duration(lastActiveTimeStamp.format('H:mm').toString()).abs().asHours();
+  const _currentHour: number = time.duration(now.format('H:mm').toString()).abs().asHours();
+  const _lastActiveHours: number = time.duration(lastActiveTimeStamp.format('H:mm').toString()).abs().asHours();
 
-  let _today12 = time().startOf('day');
-  let _startWorkTime = _today12.clone().add(_startHours, 'hour');
-  let _endWorkTime = _today12.clone().add(_endHours, 'hour');
+  const _today12 = time().startOf('day');
+  const _startWorkTime = _today12.clone().add(_startHours, 'hour');
+  const _endWorkTime = _today12.clone().add(_endHours, 'hour');
 
   // console.log({
   //   active: {

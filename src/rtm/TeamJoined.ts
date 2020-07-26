@@ -23,7 +23,7 @@ export default class TeamJoined {
             )} has joined the team!`
           );
         }
-        let presence = new Presence();
+        const presence = new Presence();
         await presence.subscribe();
       } else {
         logger.info(`A new bot ${real_name} added to the team`);

@@ -6,8 +6,6 @@ import { IPresenceData } from '@typing/presence';
 import time from '@lib/time';
 
 export default class StatusUpdateAt12 {
-  constructor() {}
-
   public run() {
     // This will fetch status of all user at 12:05 AM on every day and record the entry
 
@@ -15,17 +13,17 @@ export default class StatusUpdateAt12 {
       ' 0 05 0 * * * *',
       async () => {
         try {
-          let userPresence: IPresenceData[] | undefined = await CheckAwayStatus.allMembers();
+          const userPresence: IPresenceData[] | undefined = await CheckAwayStatus.allMembers();
           if (!!userPresence) {
-            for (let { slackID, status } of userPresence) {
-              let timestamp = time().toMySqlDateTime().toString();
-              let log = {
+            for (const { slackID, status } of userPresence) {
+              const timestamp = time().toMySqlDateTime().toString();
+              const log = {
                 slackID,
                 status,
                 timestamp
               };
               // console.log({ log });
-              let record = await addUserStatusLog(log);
+              const record = await addUserStatusLog(log);
               if (!!record) {
                 logger.info(
                   `A new entry created for ${record.getDataValue('slackID')} at table "${

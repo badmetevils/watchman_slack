@@ -18,7 +18,7 @@ const getMostRecentStatusById = async (
     return await db.table.userStatusLogs.findAll({
       limit: 1,
       where: {
-        slackID: slackID,
+        slackID,
         status,
         date: time().format('YYYY-MM-DD').toString()
       },

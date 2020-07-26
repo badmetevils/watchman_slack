@@ -27,10 +27,10 @@ export class CheckAwayStatus {
   async allMembers(): Promise<IPresenceData[] | undefined> {
     try {
       const list = (await getUserList()) || [];
-      for (let { id } of list) {
-        let status = await this.bySlackId(id);
+      for (const { id } of list) {
+        const status = await this.bySlackId(id);
         if (status?.ok) {
-          let s = status.presence === 'active' ? ('ACTIVE' as 'ACTIVE') : ('AWAY' as 'AWAY');
+          const s = status.presence === 'active' ? ('ACTIVE' as 'ACTIVE') : ('AWAY' as 'AWAY');
           this.response.push({
             slackID: id,
             status: s

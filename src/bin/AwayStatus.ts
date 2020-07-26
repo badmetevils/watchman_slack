@@ -16,9 +16,9 @@ export default class AwayStatus {
   }
 
   async log() {
-    let timestamp = await this.getPenaltyTimeStamp();
+    const timestamp = await this.getPenaltyTimeStamp();
     if (!!timestamp) {
-      let record = await addUserStatusLog({
+      const record = await addUserStatusLog({
         slackID: this.user.slackID,
         status: this.user.status,
         timestamp
@@ -30,12 +30,12 @@ export default class AwayStatus {
   }
 
   async updateTimeSheet() {
-    let lastActiveTimestamp: Moment | undefined = await this.getLastActive();
+    const lastActiveTimestamp: Moment | undefined = await this.getLastActive();
 
     if (!!lastActiveTimestamp) {
       // console.log('==========AWAY=========');
-      let timeToLog = getMinutesWhenAway(lastActiveTimestamp);
-      let timeSheet = new TimeSheet(timeToLog, this.user);
+      const timeToLog = getMinutesWhenAway(lastActiveTimestamp);
+      const timeSheet = new TimeSheet(timeToLog, this.user);
       await timeSheet.log();
       // console.log({
       //   lastActiveAt: lastActiveTimestamp.toMySqlDateTime().toString(),
@@ -46,9 +46,9 @@ export default class AwayStatus {
 
   private async getLastActive(): Promise<Moment | undefined> {
     try {
-      let lastActiveRecord = await getMostRecentStatusById(this.user.slackID, 'ACTIVE');
+      const lastActiveRecord = await getMostRecentStatusById(this.user.slackID, 'ACTIVE');
       if (Array.isArray(lastActiveRecord) && lastActiveRecord.length !== 0) {
-        let recentActiveTimestamp = time(lastActiveRecord[0].timestamp);
+        const recentActiveTimestamp = time(lastActiveRecord[0].timestamp);
         return recentActiveTimestamp;
       }
     } catch (error) {
@@ -59,10 +59,10 @@ export default class AwayStatus {
   private async getPenaltyTimeStamp(): Promise<string | undefined> {
     let timestamp = time().subtract(this.penalty, 'seconds').toMySqlDateTime().toString();
     try {
-      let lastAwayRecord = await getMostRecentStatusById(this.user.slackID, 'AWAY');
+      const lastAwayRecord = await getMostRecentStatusById(this.user.slackID, 'AWAY');
       if (Array.isArray(lastAwayRecord) && lastAwayRecord.length !== 0) {
-        let recentAwayTimestamp = time(lastAwayRecord[0].timestamp);
-        let minDiff = durationFromTimestampInMinutes(recentAwayTimestamp);
+        const recentAwayTimestamp = time(lastAwayRecord[0].timestamp);
+        const minDiff = durationFromTimestampInMinutes(recentAwayTimestamp);
         if (minDiff < (2 * this.penalty) / 60) {
           timestamp = time().toMySqlDateTime().toString();
         }

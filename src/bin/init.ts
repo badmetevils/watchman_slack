@@ -16,17 +16,17 @@ export default class Init {
   }
 
   async start() {
-    let presence = new Presence();
+    const presence = new Presence();
     await presence.subscribe();
     await presence.listen();
-    let newMember = new TeamJoined();
+    const newMember = new TeamJoined();
     newMember.join();
     runCronTask();
   }
 
   private async DatabaseConnect() {
     try {
-      let response = await db.sequelize.sync({ force: false });
+      const response = await db.sequelize.sync({ force: false });
       console.log('🆒 Database is connected and working fine');
     } catch (error) {
       console.log('😨 Database is not reachable');

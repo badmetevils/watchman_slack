@@ -11,7 +11,7 @@ export default class TimeSheet {
   private minutes: IActiveAwayMinutes;
   private user: IPresenceData;
   /**
-   *Creates an instance of TimeSheet.
+   * @description: Creates an instance of TimeSheet.
    * @param {IActiveAwayMinutes} minutes : provide time for { activeInNonWorkingHours , awayInWorkingHours}
    * @param {IPresenceData} user : user with the slackID and the status
    * @memberof TimeSheet
@@ -22,12 +22,12 @@ export default class TimeSheet {
   }
 
   public async log() {
-    let userFromDb = await getTimeLogBySlackIDByDate(this.user.slackID);
+    const userFromDb = await getTimeLogBySlackIDByDate(this.user.slackID);
     if (Array.isArray(userFromDb) && userFromDb.length !== 0) {
-      let user: IUserTimeLogModel = userFromDb[0];
+      const user: IUserTimeLogModel = userFromDb[0];
       this.updateUserTimeLog(user, this.minutes);
     } else {
-      let entry: IUserTimeLog = {
+      const entry: IUserTimeLog = {
         slackID: this.user.slackID,
         activeInNonWorkingHours: this.minutes.activeInNonWorkingHours,
         awayInWorkingHours: this.minutes.awayInWorkingHours
@@ -38,9 +38,9 @@ export default class TimeSheet {
 
   private async updateUserTimeLog(user: IUserTimeLogModel, logs: IActiveAwayMinutes) {
     try {
-      let activeInNonWorkingHours = logs.activeInNonWorkingHours + user.getDataValue('activeInNonWorkingHours');
-      let awayInWorkingHours = logs.awayInWorkingHours + user.getDataValue('awayInWorkingHours');
-      let record = await user.update({
+      const activeInNonWorkingHours = logs.activeInNonWorkingHours + user.getDataValue('activeInNonWorkingHours');
+      const awayInWorkingHours = logs.awayInWorkingHours + user.getDataValue('awayInWorkingHours');
+      const record = await user.update({
         activeInNonWorkingHours,
         awayInWorkingHours
       });
@@ -54,7 +54,7 @@ export default class TimeSheet {
 
   private async createNewTimeLog(user: IUserTimeLog) {
     try {
-      let record = await db.table.userTimeLogs.create(user);
+      const record = await db.table.userTimeLogs.create(user);
       if (!!record) {
         logger.info(`A new entry created for ${record.getDataValue('slackID')} at table "${record.constructor.name}" `);
       }

@@ -11,7 +11,7 @@ interface IResponseError {
 type IResponse = IResponseSuccess | IResponseError;
 
 const APIResponse = (args: IResponse): IResponse => {
-  if (args.status == 'SUCCESS') {
+  if (args.status === 'SUCCESS') {
     return {
       data: args.data,
       status: 'SUCCESS'

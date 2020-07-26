@@ -7,8 +7,8 @@ import logger from '@shared/Logger';
 export default class SubscribePresence {
   async allSlackUsers() {
     try {
-      let list: IUserModel[] = await db.table.user.findAll();
-      let listInDb: IUser[] = list.map(d => d.get());
+      const list: IUserModel[] = await db.table.user.findAll();
+      const listInDb: IUser[] = list.map(d => d.get());
       if (listInDb.length === 0) {
         this.storeUsers();
       } else {
@@ -21,8 +21,8 @@ export default class SubscribePresence {
 
   private async storeUsers() {
     try {
-      let list = (await getUserList()) || [];
-      let user: IUser[] = list.map(l => ({ slackID: l.id, name: l.real_name }));
+      const list = (await getUserList()) || [];
+      const user: IUser[] = list.map(l => ({ slackID: l.id, name: l.real_name }));
       await db.table.user.bulkCreate(user);
       this.attachSubscriber(user);
     } catch (error) {
@@ -30,9 +30,9 @@ export default class SubscribePresence {
     }
   }
 
-  private attachSubscriber(list: Array<{ slackID: string }>) {
+  private attachSubscriber(list: { slackID: string }[]) {
     if (list?.length !== 0 && Array.isArray(list)) {
-      let users = list?.map(d => d.slackID);
+      const users = list?.map(d => d.slackID);
       watchmanRTM.subscribePresence(users);
     }
   }

@@ -1,6 +1,5 @@
 import { Request, Response, Router } from 'express';
 import { BAD_REQUEST, CREATED, OK, ACCEPTED } from 'http-status-codes';
-import { ParamsDictionary } from 'express-serve-static-core';
 import { getAllUsers, getTimeLogByISlackIDAndDateRange } from '@models/queries';
 import APIResponse from '@express-app/APIResponse';
 import logger from '@shared/Logger';
@@ -15,9 +14,9 @@ const pathName = {
 const router = Router();
 
 router.get(pathName.list, async (req: Request, res: Response) => {
-  let records = await getAllUsers();
+  const records = await getAllUsers();
   if (!!records) {
-    let data = records.map(r => r.get());
+    const data = records.map(r => r.get());
     return res.status(ACCEPTED).json(APIResponse({ data, status: 'SUCCESS' }));
   }
   logger.error('API Error when tries to get list of all users');
@@ -25,7 +24,7 @@ router.get(pathName.list, async (req: Request, res: Response) => {
 });
 
 router.post(pathName.getTimeLog, async (req: Request, res: Response) => {
-  let defaultDate = time().format('YYYY-MM-DD').toString();
+  const defaultDate = time().format('YYYY-MM-DD').toString();
   const { id, fromDate = defaultDate, toDate = defaultDate, limit = 10, offset = 0 } = req.body;
   // if (!id || !fromDate) {
   //   res
@@ -42,7 +41,7 @@ router.post(pathName.getTimeLog, async (req: Request, res: Response) => {
     res.status(BAD_REQUEST).json(APIResponse({ status: 'FAILURE', message: `fromDate can't be after toDate ` }));
   }
 
-  let records = await getTimeLogByISlackIDAndDateRange(
+  const records = await getTimeLogByISlackIDAndDateRange(
     id,
     startDate.format('YYYY-MM-DD').toString(),
     endDate.format('YYYY-MM-DD').toString(),
@@ -50,7 +49,7 @@ router.post(pathName.getTimeLog, async (req: Request, res: Response) => {
     offset
   );
   if (!!records) {
-    let data = records.map(r => r.get());
+    const data = records.map(r => r.get());
     res.status(ACCEPTED).json(APIResponse({ status: 'SUCCESS', data }));
   }
 });
