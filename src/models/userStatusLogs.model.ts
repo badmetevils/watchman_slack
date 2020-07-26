@@ -1,9 +1,10 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import { IUserStatusLogModel } from './interface/model';
 import time from '@lib/time';
+import userModel from './users.model';
 
-const userStatusLogModel = (db: Sequelize) =>
-  db.define<IUserStatusLogModel>(
+const userStatusLogModel = (db: Sequelize) => {
+  const statusLog = db.define<IUserStatusLogModel>(
     'user_status_logs',
     {
       id: {
@@ -44,5 +45,9 @@ const userStatusLogModel = (db: Sequelize) =>
       updatedAt: 'updated_at'
     }
   );
-
+  statusLog.belongsTo(userModel(db), {
+    foreignKey: 'slackID'
+  });
+  return statusLog;
+};
 export default userStatusLogModel;

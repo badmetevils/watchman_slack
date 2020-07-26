@@ -26,12 +26,12 @@ router.get(pathName.list, async (req: Request, res: Response) => {
 
 router.post(pathName.getTimeLog, async (req: Request, res: Response) => {
   let defaultDate = time().format('YYYY-MM-DD').toString();
-  const { id, fromDate = defaultDate, toDate = defaultDate } = req.body;
-  if (!id || !fromDate) {
-    res
-      .status(BAD_REQUEST)
-      .json(APIResponse({ status: 'FAILURE', message: `one or more mandatory fields are missing` }));
-  }
+  const { id, fromDate = defaultDate, toDate = defaultDate, limit = 10, offset = 0 } = req.body;
+  // if (!id || !fromDate) {
+  //   res
+  //     .status(BAD_REQUEST)
+  //     .json(APIResponse({ status: 'FAILURE', message: `one or more mandatory fields are missing` }));
+  // }
   const startDate = time(fromDate);
   const endDate = time(toDate);
 
@@ -45,7 +45,9 @@ router.post(pathName.getTimeLog, async (req: Request, res: Response) => {
   let records = await getTimeLogByISlackIDAndDateRange(
     id,
     startDate.format('YYYY-MM-DD').toString(),
-    endDate.format('YYYY-MM-DD').toString()
+    endDate.format('YYYY-MM-DD').toString(),
+    limit,
+    offset
   );
   if (!!records) {
     let data = records.map(r => r.get());

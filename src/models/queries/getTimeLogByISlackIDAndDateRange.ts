@@ -12,21 +12,32 @@ import { Op } from 'sequelize';
  * * @param {string} [endDate=time().format('YYYY-MM-DD').toString()] : end Date in format YYY-MM-DD
  * @returns {(Promise<IUserTimeLog[] | undefined>)} : sequelize modal object
  */
+
 const getTimeLogByISlackIDAndDateRange = async (
-  slackID: string,
+  slackID: string | null = null,
   startDate: string = time().format('YYYY-MM-DD').toString(),
-  endDate: string = time().format('YYYY-MM-DD').toString()
+  endDate: string = time().format('YYYY-MM-DD').toString(),
+  limit: number = 10,
+  offset: number = 0
 ): Promise<IUserTimeLogModel[] | undefined> => {
   try {
-    return await db.table.userTimeLogs.findAll({
-      where: {
-        slackID,
-        date: {
-          [Op.between]: [startDate, endDate]
-        }
+    const where = {
+      date: {
+        [Op.between]: [startDate, endDate]
       }
+    };
+    if (!!slackID) {
+      //@ts-ignore
+      where.slackID = slackID;
+    }
+    return await db.table.userTimeLogs.findAll({
+      limit,
+      offset,
+      where,
+      include: [{ model: db.table.user, attributes: ['name'], nested: true }]
     });
   } catch (error) {
+    console.log(error);
     logger.error(error);
   }
 };

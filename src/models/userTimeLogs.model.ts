@@ -1,11 +1,18 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import { IUserTimeLogModel } from './interface/model';
 import time from '@lib/time';
+import userModel from './users.model';
 
-const userTimeLogsModel = (db: Sequelize) =>
-  db.define<IUserTimeLogModel>(
+const userTimeLogsModel = (db: Sequelize) => {
+  let timeLogs = db.define<IUserTimeLogModel>(
     'user_time',
     {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        field: 'id'
+      },
       slackID: {
         type: DataTypes.STRING,
         field: 'slack_id',
@@ -40,5 +47,10 @@ const userTimeLogsModel = (db: Sequelize) =>
       updatedAt: 'updated_at'
     }
   );
+  timeLogs.belongsTo(userModel(db), {
+    foreignKey: 'slackID'
+  });
+  return timeLogs;
+};
 
 export default userTimeLogsModel;

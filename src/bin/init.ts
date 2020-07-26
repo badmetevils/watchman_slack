@@ -30,6 +30,7 @@ export default class Init {
       console.log('🆒 Database is connected and working fine');
     } catch (error) {
       console.log('😨 Database is not reachable');
+      console.log(error);
       logger.log('error', error);
     }
   }

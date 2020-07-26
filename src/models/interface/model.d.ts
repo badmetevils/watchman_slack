@@ -16,6 +16,7 @@ export interface IUserStatusLog {
 }
 
 export interface IUserTimeLog {
+  id?: string;
   slackID: string;
   date?: string;
   awayInWorkingHours?: number;
