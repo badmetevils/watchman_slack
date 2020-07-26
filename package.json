@@ -1,6 +1,8 @@
 {
   "name": "watchman",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "A Slack app with RTM and WebAPI integration along with API with express",
+  "license": "Private",
   "scripts": {
     "build": "node build.js",
     "lint": "tslint --project \"tsconfig.json\"",
