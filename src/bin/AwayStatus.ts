@@ -12,7 +12,7 @@ export default class AwayStatus {
 
   constructor(user: IPresenceData) {
     this.user = user;
-    this.penalty = parseInt(process.env.PENALTY_IN_SECONDS || '1800');
+    this.penalty = parseInt(process.env.PENALTY_IN_SECONDS || '1800', 10);
   }
 
   async log() {
@@ -33,14 +33,16 @@ export default class AwayStatus {
     const lastActiveTimestamp: Moment | undefined = await this.getLastActive();
 
     if (!!lastActiveTimestamp) {
-      // console.log('==========AWAY=========');
       const timeToLog = getMinutesWhenAway(lastActiveTimestamp);
       const timeSheet = new TimeSheet(timeToLog, this.user);
       await timeSheet.log();
-      // console.log({
-      //   lastActiveAt: lastActiveTimestamp.toMySqlDateTime().toString(),
-      //   timeToLog
-      // });
+      if (process.env.NODE_ENV === 'development') {
+        console.log({
+          user: this.user,
+          lastActiveAt: lastActiveTimestamp.toMySqlDateTime().toString(),
+          timeToLog
+        });
+      }
     }
   }
 

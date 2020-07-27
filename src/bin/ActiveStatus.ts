@@ -31,14 +31,16 @@ export default class ActiveStatus {
     const lastAwayTimeStamp: Moment | undefined = await this.getLastAway();
 
     if (!!lastAwayTimeStamp) {
-      // console.log('==========ACTIVE=========');
       const timeToLog = getMinutesWhenActive(lastAwayTimeStamp);
       const timeSheet = new TimeSheet(timeToLog, this.user);
       await timeSheet.log();
-      // console.log({
-      //   lastAwayAt: lastAwayTimeStamp.toMySqlDateTime().toString(),
-      //   timeToLog
-      // });
+      if (process.env.NODE_ENV === 'development') {
+        console.log({
+          user: this.user,
+          lastActiveAt: lastAwayTimeStamp.toMySqlDateTime().toString(),
+          timeToLog
+        });
+      }
     }
   }
 

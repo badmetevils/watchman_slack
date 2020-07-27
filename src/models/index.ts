@@ -3,7 +3,6 @@ import userModel from './users.model';
 import userTimeLogsModel from './userTimeLogs.model';
 import userStatusLogModel from './userStatusLogs.model';
 import { IUserModel, IUserTimeLogModel, IUserStatusLogModel } from './interface/model.d';
-import winston from 'winston';
 
 const {
   DB_USER = 'root',
@@ -15,7 +14,7 @@ const {
 
 const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
   host: DB_HOST,
-  port: parseInt(DB_PORT),
+  port: parseInt(DB_PORT, 10),
   dialect: 'mysql',
   pool: {
     max: 10,

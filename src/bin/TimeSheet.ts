@@ -38,8 +38,9 @@ export default class TimeSheet {
 
   private async updateUserTimeLog(user: IUserTimeLogModel, logs: IActiveAwayMinutes) {
     try {
-      const activeInNonWorkingHours = logs.activeInNonWorkingHours + user.getDataValue('activeInNonWorkingHours');
-      const awayInWorkingHours = logs.awayInWorkingHours + user.getDataValue('awayInWorkingHours');
+      const activeInNonWorkingHours =
+        logs.activeInNonWorkingHours + parseFloat(user.getDataValue('activeInNonWorkingHours'));
+      const awayInWorkingHours = logs.awayInWorkingHours + parseFloat(user.getDataValue('awayInWorkingHours'));
       const record = await user.update({
         activeInNonWorkingHours,
         awayInWorkingHours

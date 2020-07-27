@@ -5,8 +5,8 @@ import { IActiveAwayMinutes } from '@typing/presence';
 export const isWorkingHours = (timeStamp: string | undefined | null = null): boolean => {
   const hour = !!timeStamp ? time(timeStamp).hour() : time().hour();
 
-  const start = parseInt(process.env.WORK_HOUR_START || '10');
-  const end = parseInt(process.env.WORK_HOUR_ENDS || '19');
+  const start = parseFloat(process.env.WORK_HOUR_START || '10');
+  const end = parseFloat(process.env.WORK_HOUR_ENDS || '19');
 
   if (hour >= start && hour < end) {
     return true;
