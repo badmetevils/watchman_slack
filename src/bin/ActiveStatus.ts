@@ -14,7 +14,7 @@ export default class ActiveStatus {
   }
 
   async log() {
-    const timestamp = time().toMySqlDateTime().toString();
+    const timestamp = time.utc().toMySqlDateTime().toString();
     if (!!timestamp) {
       const record = await addUserStatusLog({
         slackID: this.user.slackID,
@@ -48,7 +48,9 @@ export default class ActiveStatus {
     try {
       const lastAwayRecord = await getMostRecentStatusById(this.user.slackID, 'AWAY');
       if (Array.isArray(lastAwayRecord) && lastAwayRecord.length !== 0) {
-        const recentAwayTimestamp = time(lastAwayRecord[0].timestamp);
+        const ts = lastAwayRecord[0].get('timestamp');
+        // console.log({ away: ts });
+        const recentAwayTimestamp = time(ts);
         return recentAwayTimestamp;
       }
     } catch (error) {

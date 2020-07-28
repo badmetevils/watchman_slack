@@ -50,7 +50,9 @@ export default class AwayStatus {
     try {
       const lastActiveRecord = await getMostRecentStatusById(this.user.slackID, 'ACTIVE');
       if (Array.isArray(lastActiveRecord) && lastActiveRecord.length !== 0) {
-        const recentActiveTimestamp = time(lastActiveRecord[0].timestamp);
+        const ts = lastActiveRecord[0].get('timestamp');
+        // console.log({ active: ts });
+        const recentActiveTimestamp = time(ts);
         return recentActiveTimestamp;
       }
     } catch (error) {
@@ -59,14 +61,14 @@ export default class AwayStatus {
   }
 
   private async getPenaltyTimeStamp(): Promise<string | undefined> {
-    let timestamp = time().subtract(this.penalty, 'seconds').toMySqlDateTime().toString();
+    let timestamp = time.utc().subtract(this.penalty, 'seconds').toMySqlDateTime().toString();
     try {
       const lastAwayRecord = await getMostRecentStatusById(this.user.slackID, 'AWAY');
       if (Array.isArray(lastAwayRecord) && lastAwayRecord.length !== 0) {
         const recentAwayTimestamp = time(lastAwayRecord[0].timestamp);
         const minDiff = durationFromTimestampInMinutes(recentAwayTimestamp);
         if (minDiff < (2 * this.penalty) / 60) {
-          timestamp = time().toMySqlDateTime().toString();
+          timestamp = time.utc().toMySqlDateTime().toString();
         }
       }
       return timestamp;
