@@ -39,7 +39,9 @@ export default class AwayStatus {
       if (process.env.NODE_ENV === 'development') {
         console.log({
           user: this.user,
+          m: lastActiveTimestamp,
           lastActiveAt: lastActiveTimestamp.toMySqlDateTime().toString(),
+          timeZone: lastActiveTimestamp.zone(),
           timeToLog
         });
       }
@@ -51,7 +53,7 @@ export default class AwayStatus {
       const lastActiveRecord = await getMostRecentStatusById(this.user.slackID, 'ACTIVE');
       if (Array.isArray(lastActiveRecord) && lastActiveRecord.length !== 0) {
         const ts = lastActiveRecord[0].get('timestamp');
-        // console.log({ active: ts });
+        console.log({ activeFromDb: ts });
         const recentActiveTimestamp = time(ts);
         return recentActiveTimestamp;
       }
