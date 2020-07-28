@@ -24,7 +24,11 @@ export default class AwayStatus {
         timestamp
       });
       if (!!record) {
-        logger.info(`A new entry created for ${record.getDataValue('slackID')} at table "${record.constructor.name}" `);
+        logger.info(
+          `A  new "AWAY" entry created for ${record.getDataValue('slackID')} at table "${
+            record.constructor.name
+          }"  on ${timestamp}`
+        );
       }
     }
   }
@@ -41,7 +45,6 @@ export default class AwayStatus {
           user: this.user,
           m: lastActiveTimestamp,
           lastActiveAt: lastActiveTimestamp.toMySqlDateTime().toString(),
-          timeZone: lastActiveTimestamp.zone(),
           timeToLog
         });
       }
@@ -63,14 +66,14 @@ export default class AwayStatus {
   }
 
   private async getPenaltyTimeStamp(): Promise<string | undefined> {
-    let timestamp = time.utc().subtract(this.penalty, 'seconds').toMySqlDateTime().toString();
+    let timestamp = time().subtract(this.penalty, 'seconds').toMySqlDateTime().toString();
     try {
       const lastAwayRecord = await getMostRecentStatusById(this.user.slackID, 'AWAY');
       if (Array.isArray(lastAwayRecord) && lastAwayRecord.length !== 0) {
         const recentAwayTimestamp = time(lastAwayRecord[0].timestamp);
         const minDiff = durationFromTimestampInMinutes(recentAwayTimestamp);
         if (minDiff < (2 * this.penalty) / 60) {
-          timestamp = time.utc().toMySqlDateTime().toString();
+          timestamp = time().toMySqlDateTime().toString();
         }
       }
       return timestamp;

@@ -35,10 +35,11 @@ export const getMinutesWhenActive = (lastAwayTimeStamp: Moment): IActiveAwayMinu
   const _endWorkTime = _today12.clone().add(_endHours, 'hour');
   // console.log({
   //   away: {
-  //     _totalTimeElapsed: _totalTimeElapsed,
-  //     _startWorkTime: _startWorkTime.format('h:mm').toString(),
-  //     _endWorkTime: _endWorkTime.format('h:mm').toString(),
-  //     _lastAway: lastAwayTimeStamp.format('h:mm').toString()
+  //     now: now.toString(),
+  //     _totalTimeElapsed,
+  //     _startHours,
+  //     _endHours,
+  //     _lastAwayHours
   //   }
   // });
   /**
@@ -117,10 +118,11 @@ export const getMinutesWhenAway = (lastActiveTimeStamp: Moment): IActiveAwayMinu
 
   // console.log({
   //   active: {
-  //     _totalTimeElapsed: _totalTimeElapsed,
-  //     _startWorkTime: _startWorkTime.format('h:mm').toString(),
-  //     _endWorkTime: _endWorkTime.format('h:mm').toString(),
-  //     _lastActive: lastActiveTimeStamp.format('h:mm').toString()
+  //     now: now.toString(),
+  //     _startHours,
+  //     _endHours,
+  //     _totalTimeElapsed,
+  //     _lastActiveHours
   //   }
   // });
 

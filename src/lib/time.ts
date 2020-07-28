@@ -10,8 +10,8 @@ moment.prototype.toMySqlDateTime = function () {
   return this.format('YYYY-MM-DD HH:mm:ss');
 };
 
-const timeZone = process.env.TIME_ZONE || 'Asia/Kolkata';
+const timeZone = 'Asia/Kolkata';
+moment.tz.setDefault(timeZone);
 const time: typeof moment = moment;
 
-time.tz.setDefault(timeZone);
 export default time;

@@ -14,7 +14,7 @@ export default class ActiveStatus {
   }
 
   async log() {
-    const timestamp = time.utc().toMySqlDateTime().toString();
+    const timestamp = time().toMySqlDateTime().toString();
     if (!!timestamp) {
       const record = await addUserStatusLog({
         slackID: this.user.slackID,
@@ -22,7 +22,11 @@ export default class ActiveStatus {
         timestamp
       });
       if (!!record) {
-        logger.info(`A new entry created for ${record.getDataValue('slackID')} at table "${record.constructor.name}" `);
+        logger.info(
+          `A new  "ACTIVE" entry created for ${record.getDataValue('slackID')} at table "${
+            record.constructor.name
+          }" on ${timestamp} `
+        );
       }
     }
   }
@@ -39,7 +43,6 @@ export default class ActiveStatus {
           user: this.user,
           m: lastAwayTimeStamp,
           lastAwayAt: lastAwayTimeStamp.toMySqlDateTime().toString(),
-          timeZone: lastAwayTimeStamp.zone(),
           timeToLog
         });
       }
@@ -51,8 +54,8 @@ export default class ActiveStatus {
       const lastAwayRecord = await getMostRecentStatusById(this.user.slackID, 'AWAY');
       if (Array.isArray(lastAwayRecord) && lastAwayRecord.length !== 0) {
         const ts = lastAwayRecord[0].get('timestamp');
-        console.log({ awayFromDb: ts });
-        const recentAwayTimestamp = time(ts);
+        // console.log({ awayFromDb: ts });
+        const recentAwayTimestamp = time(ts).utcOffset(330).clone();
         return recentAwayTimestamp;
       }
     } catch (error) {

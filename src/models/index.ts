@@ -21,6 +21,9 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
     min: 0,
     idle: 10000
   },
+  dialectOptions: {
+    dateStrings: true
+  },
   logging: false
 });
 

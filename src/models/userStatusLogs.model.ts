@@ -2,6 +2,7 @@ import { Sequelize, DataTypes } from 'sequelize';
 import { IUserStatusLogModel } from './interface/model';
 import time from '@lib/time';
 import userModel from './users.model';
+import moment from 'moment-timezone';
 
 const userStatusLogModel = (db: Sequelize) => {
   const statusLog = db.define<IUserStatusLogModel>(
@@ -28,7 +29,12 @@ const userStatusLogModel = (db: Sequelize) => {
         type: DataTypes.DATE,
         field: 'timestamp',
         get() {
-          return time(this.getDataValue('timestamp')).toMySqlDateTime();
+          const t = time(this.getDataValue('timestamp'));
+          return time(t.clone().utcOffset(0, false)).clone().utcOffset(330, false).toMySqlDateTime().toString();
+        },
+        set(valueToBeSet: string) {
+          const value = time(valueToBeSet).utcOffset(330, false).toMySqlDateTime().toString();
+          return this.setDataValue('timestamp', value);
         }
       },
       status: {
