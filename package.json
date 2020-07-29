@@ -52,7 +52,8 @@
     "morgan": "^1.10.0",
     "mysql2": "^2.1.0",
     "node-cron": "^2.0.3",
-    "sequelize": "^6.3.3"
+    "sequelize": "^6.3.3",
+    "winston-daily-rotate-file": "^4.5.0"
   },
   "devDependencies": {
     "@types/command-line-args": "^5.0.0",
