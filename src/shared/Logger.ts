@@ -5,10 +5,19 @@
  */
 
 import { createLogger, format, transports } from 'winston';
-
+import DailyRotateFile from 'winston-daily-rotate-file';
 // Import Functions
 const { File, Console } = transports;
 
+const rotationTransport = new DailyRotateFile({
+  filename: 'watchman-%DATE%.log',
+  datePattern: 'YYYY-MM-DD-HH',
+  zippedArchive: true,
+  maxSize: '20m',
+  maxFiles: '7d',
+  dirname: './logs',
+  auditFile: './logs/winston-audit.json'
+});
 // Init Logger
 const logger = createLogger({
   level: 'info'
@@ -20,7 +29,7 @@ const logger = createLogger({
  * For development, print to the console.
  */
 if (process.env.NODE_ENV === 'production') {
-  const fileFormat = format.combine(format.timestamp(), format.json());
+  /*   const fileFormat = format.combine(format.timestamp(), format.json());
   const errTransport = new File({
     filename: './logs/error.log',
     format: fileFormat,
@@ -32,7 +41,8 @@ if (process.env.NODE_ENV === 'production') {
     level: 'info'
   });
   logger.add(errTransport);
-  logger.add(infoTransport);
+  logger.add(infoTransport); */
+  logger.add(rotationTransport);
 } else {
   const errorStackFormat = format(info => {
     if (info.stack) {
