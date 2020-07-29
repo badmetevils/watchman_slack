@@ -11,7 +11,7 @@ export default class DeleteStatusLogs {
       async () => {
         try {
           const date = time().format('YYYY-MM-DD').toString();
-          console.log({ date });
+          // console.log({ date });
           const record = await deleteStatusLogsByDate(date);
           if (!!record) {
             logger.info(`Delete ${record} status logs by Cron `);

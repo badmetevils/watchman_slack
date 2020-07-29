@@ -37,7 +37,7 @@ const getTimeLogByISlackIDAndDateRange = async (
       include: [{ model: db.table.user, attributes: ['name'], nested: true }]
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     logger.error(error);
   }
 };

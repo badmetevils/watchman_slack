@@ -1,0 +1,31 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "rootDir": "./src",
+    "experimentalDecorators": true,
+    "target": "es5",
+    "module": "ESNext",
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "lib": [
+      "es2017",
+      "es2015",
+      "dom",
+      "ES5"
+    ],
+    "jsx": "react",
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
+    "strictNullChecks": false,
+    "typeRoots": ["node_modules/@types", "src/typings"],
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "webpack"]
+}
