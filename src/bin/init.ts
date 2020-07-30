@@ -6,6 +6,7 @@ import Presence from '@bin/Presence';
 import TeamJoined from '@watchman-rtm/TeamJoined';
 import runCronTask from './cron';
 import ExpressServer from '@express-app/Server';
+import MessageRTM from '@watchman-rtm/PingPong';
 
 export default class Init {
   async connect() {
@@ -16,6 +17,8 @@ export default class Init {
   }
 
   async start() {
+    const pingPong = new MessageRTM();
+    pingPong.checkPing();
     const presence = new Presence();
     await presence.subscribe();
     await presence.listen();
