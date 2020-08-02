@@ -19,14 +19,20 @@ export default class Init {
   async start() {
     const pingPong = new MessageRTM();
     pingPong.checkPing();
-    const presence = new Presence();
-    await presence.subscribe();
-    await presence.listen();
-    const newMember = new TeamJoined();
-    newMember.join();
     runCronTask();
+    this.handleSubscribeOnRTMConnect();
   }
 
+  private handleSubscribeOnRTMConnect() {
+    watchmanRTM.on('hello', async event => {
+      logger.info(`Received "hello" event now re subscribing to the presence of the list of users`);
+      const presence = new Presence();
+      await presence.subscribe();
+      await presence.listen();
+      const newMember = new TeamJoined();
+      newMember.join();
+    });
+  }
   private async DatabaseConnect() {
     try {
       const response = await db.sequelize.sync({ force: process.env.NODE_ENV === 'development' });
@@ -39,6 +45,7 @@ export default class Init {
 
   private async RTMConnect() {
     try {
+      // batch_presence_aware : seems not be working as of now
       const { self, team } = await watchmanRTM.start();
       console.log(`🚀  Listening  to the RTM events`);
     } catch (error) {

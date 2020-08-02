@@ -20,7 +20,8 @@ const getMostRecentStatusById = async (
       where: {
         slackID,
         status,
-        date: time().format('YYYY-MM-DD').toString()
+        date: time().format('YYYY-MM-DD').toString(),
+        isArchived: false
       },
       order: [['created_at', 'DESC']]
     });

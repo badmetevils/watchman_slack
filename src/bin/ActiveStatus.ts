@@ -54,7 +54,6 @@ export default class ActiveStatus {
       const lastAwayRecord = await getMostRecentStatusById(this.user.slackID, 'AWAY');
       if (Array.isArray(lastAwayRecord) && lastAwayRecord.length !== 0) {
         const ts = lastAwayRecord[0].get('timestamp');
-        // console.log({ awayFromDb: ts });
         const recentAwayTimestamp = time(ts).utcOffset(330).clone();
         return recentAwayTimestamp;
       }

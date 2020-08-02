@@ -41,6 +41,11 @@ const userStatusLogModel = (db: Sequelize) => {
         type: DataTypes.ENUM,
         values: ['ACTIVE', 'AWAY'],
         field: 'status'
+      },
+      isArchived: {
+        type: DataTypes.BOOLEAN,
+        field: 'is_archive',
+        defaultValue: false
       }
     },
     {

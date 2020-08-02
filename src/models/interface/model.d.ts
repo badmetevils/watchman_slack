@@ -8,6 +8,7 @@ export interface IUser {
 export interface IUserStatusLog {
   slackID: string;
   status: 'ACTIVE' | 'AWAY';
+  isArchived?: boolean;
   id?: string;
   timestamp: string;
   date?: string;
