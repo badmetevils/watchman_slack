@@ -25,14 +25,14 @@ export default class TimeSheet {
     const userFromDb = await getTimeLogBySlackIDByDate(this.user.slackID);
     if (Array.isArray(userFromDb) && userFromDb.length !== 0) {
       const user: IUserTimeLogModel = userFromDb[0];
-      this.updateUserTimeLog(user, this.minutes);
+      await this.updateUserTimeLog(user, this.minutes);
     } else {
       const entry: IUserTimeLog = {
         slackID: this.user.slackID,
         activeInNonWorkingHours: this.minutes.activeInNonWorkingHours,
         awayInWorkingHours: this.minutes.awayInWorkingHours
       };
-      this.createNewTimeLog(entry);
+      await this.createNewTimeLog(entry);
     }
   }
 

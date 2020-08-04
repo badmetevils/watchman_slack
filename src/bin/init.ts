@@ -21,16 +21,17 @@ export default class Init {
     pingPong.checkPing();
     runCronTask();
     this.handleSubscribeOnRTMConnect();
+    const presence = new Presence();
+    await presence.listen();
+    const newMember = new TeamJoined();
+    newMember.join();
   }
 
   private handleSubscribeOnRTMConnect() {
     watchmanRTM.on('hello', async event => {
-      logger.info(`Received "hello" event now re subscribing to the presence of the list of users`);
+      logger.info(`Received "hello" event  re-subscribing to the presence of users`);
       const presence = new Presence();
       await presence.subscribe();
-      await presence.listen();
-      const newMember = new TeamJoined();
-      newMember.join();
     });
   }
   private async DatabaseConnect() {

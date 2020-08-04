@@ -11,12 +11,12 @@ const { File, Console } = transports;
 
 const rotationTransport = new DailyRotateFile({
   filename: 'watchman-%DATE%.log',
-  datePattern: 'YYYY-MM-DD-HH',
   zippedArchive: true,
-  maxSize: '20m',
+  maxSize: '50m',
   maxFiles: '7d',
   dirname: './logs',
-  auditFile: './logs/winston-audit.json'
+  auditFile: './logs/audit.json',
+  format: format.combine(format.timestamp(), format.json())
 });
 // Init Logger
 const logger = createLogger({
