@@ -68,3 +68,5 @@ Please use the following steps to development
 - `cd <project-root>
 - `npm run build` to build the production build
 - to run the application use `pm2 start npm --name "YOUR-APP-NAME" -- start` name of the app can be anything its just a identifier used by pm2 to identify the app in the list
+
+> Note : this doc is for backend only from front end please go through `readme.md`of `frontend`
