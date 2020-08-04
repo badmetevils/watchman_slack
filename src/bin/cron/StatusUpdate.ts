@@ -4,11 +4,11 @@ import Presence from '@bin/Presence';
 
 export default class StatusUpdateAt12 {
   public run() {
-    // This will fetch status of all user at 12:05 AM on every day and record the entry
-    //      ' 0 05 0 * * * *',
+    // This will fetch status of all user at 1:00 AM on every day and record the entry
+    //      '  0 0 1 * * * *,
 
     cron.schedule(
-      ' 0 05 0 * * * *',
+      ' 0 0 1 * * * *',
       async () => {
         try {
           logger.info('re-subscribing over cron');

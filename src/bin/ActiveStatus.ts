@@ -23,9 +23,9 @@ export default class ActiveStatus {
       });
       if (!!record) {
         logger.info(
-          `A new  "ACTIVE" entry created for ${record.getDataValue('slackID')} at table "${
+          `A new  'ACTIVE' entry created for ${record.getDataValue('slackID')} at table '${
             record.constructor.name
-          }" on ${timestamp} `
+          }' on ${timestamp} `
         );
       }
     }

@@ -46,7 +46,7 @@ export default class TimeSheet {
         awayInWorkingHours
       });
       if (!!record) {
-        logger.info(`An entry updated for ${record.getDataValue('slackID')} at table "${record.constructor.name}" `);
+        logger.info(`An entry updated for ${record.getDataValue('slackID')} at table '${record.constructor.name}'`);
       }
     } catch (error) {
       logger.error(error);
@@ -57,7 +57,7 @@ export default class TimeSheet {
     try {
       const record = await db.table.userTimeLogs.create(user);
       if (!!record) {
-        logger.info(`A new entry created for ${record.getDataValue('slackID')} at table "${record.constructor.name}" `);
+        logger.info(`A new entry created for ${record.getDataValue('slackID')} at table '${record.constructor.name}'`);
       }
     } catch (error) {
       logger.error(error);

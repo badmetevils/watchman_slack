@@ -1,13 +1,14 @@
 import { Request, Response, Router } from 'express';
 import { BAD_REQUEST, CREATED, OK, ACCEPTED } from 'http-status-codes';
-import { getAllUsers, getTimeLogByISlackIDAndDateRange } from '@models/queries';
+import { getAllUsers, getTimeLogByISlackIDAndDateRange, getStatusLogsByIdAndDate } from '@models/queries';
 import APIResponse from '@express-app/APIResponse';
 import logger from '@shared/Logger';
 import time from '@lib/time';
 
 const pathName = {
   list: '/list',
-  getTimeLog: '/get_time_log'
+  getTimeLog: '/get_time_log',
+  getActivityLog: '/get_activity_log'
 };
 
 // Init shared
@@ -26,19 +27,21 @@ router.get(pathName.list, async (req: Request, res: Response) => {
 router.post(pathName.getTimeLog, async (req: Request, res: Response) => {
   const defaultDate = time().format('YYYY-MM-DD').toString();
   const { id, fromDate = defaultDate, toDate = defaultDate, limit = 10, offset = 0 } = req.body;
-  // if (!id || !fromDate) {
-  //   res
-  //     .status(BAD_REQUEST)
-  //     .json(APIResponse({ status: 'FAILURE', message: `one or more mandatory fields are missing` }));
-  // }
+  if (!fromDate) {
+    res
+      .status(BAD_REQUEST)
+      .json(APIResponse({ status: 'FAILURE', message: `one or more mandatory fields are missing` }));
+  }
   const startDate = time(fromDate);
   const endDate = time(toDate);
 
   if (!startDate.isValid() || !endDate.isValid()) {
-    res.status(BAD_REQUEST).json(APIResponse({ status: 'FAILURE', message: `the date range seems to be invalid` }));
+    return res
+      .status(BAD_REQUEST)
+      .json(APIResponse({ status: 'FAILURE', message: `the date range seems to be invalid` }));
   }
   if (endDate.isBefore(startDate)) {
-    res.status(BAD_REQUEST).json(APIResponse({ status: 'FAILURE', message: `fromDate can't be after toDate ` }));
+    return res.status(BAD_REQUEST).json(APIResponse({ status: 'FAILURE', message: `fromDate can't be after toDate ` }));
   }
 
   const records = await getTimeLogByISlackIDAndDateRange(
@@ -50,8 +53,21 @@ router.post(pathName.getTimeLog, async (req: Request, res: Response) => {
   );
   if (!!records) {
     const data = records.map(r => r.get());
-    res.status(ACCEPTED).json(APIResponse({ status: 'SUCCESS', data }));
+    return res.status(ACCEPTED).json(APIResponse({ status: 'SUCCESS', data }));
   }
+});
+
+router.get(pathName.getActivityLog, async (req: Request, res: Response) => {
+  const params = req.query;
+  console.log(params);
+  if (!('id' in params && 'date' in params)) {
+    return res
+      .status(BAD_REQUEST)
+      .json(APIResponse({ status: 'FAILURE', message: `missing required params 'id' or 'date'` }));
+  }
+  // @ts-ignore
+  const record = await getStatusLogsByIdAndDate(params.id, params.date);
+  return res.status(OK).json(APIResponse({ status: 'SUCCESS', data: record }));
 });
 
 export default router;

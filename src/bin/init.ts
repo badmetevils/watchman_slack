@@ -29,7 +29,7 @@ export default class Init {
 
   private handleSubscribeOnRTMConnect() {
     watchmanRTM.on('hello', async event => {
-      logger.info(`Received "hello" event  re-subscribing to the presence of users`);
+      logger.info(`Received 'hello' event  re-subscribing to the presence of users`);
       const presence = new Presence();
       await presence.subscribe();
     });

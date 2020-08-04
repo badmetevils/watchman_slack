@@ -25,9 +25,9 @@ export default class AwayStatus {
       });
       if (!!record) {
         logger.info(
-          `A  new "AWAY" entry created for ${record.getDataValue('slackID')} at table "${
+          `A  new 'AWAY' entry created for ${record.getDataValue('slackID')} at table '${
             record.constructor.name
-          }"  on ${timestamp}`
+          }'  on ${timestamp}`
         );
       }
     }
