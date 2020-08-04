@@ -59,7 +59,7 @@ const Home = () => {
       const list = await http.request<{ data: IUserList[]; status: 'SUCCESS' | 'FAILURE' }>(`${endpoint}/users/list`, {
         method: 'GET'
       });
-      if (list.status == 'SUCCESS') {
+      if (list.status === 'SUCCESS') {
         setUsers(list.data);
       }
     } catch (error) {

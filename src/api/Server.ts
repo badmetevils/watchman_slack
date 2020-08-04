@@ -1,7 +1,7 @@
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import helmet from 'helmet';
-
+import cors from 'cors';
 import express, { Request, Response, NextFunction } from 'express';
 import { BAD_REQUEST } from 'http-status-codes';
 import 'express-async-errors';
@@ -15,7 +15,7 @@ const expressApp = express();
 /************************************************************************************
  *                              Set basic express settings
  ***********************************************************************************/
-
+expressApp.use(cors());
 expressApp.use(express.json());
 expressApp.use(express.urlencoded({ extended: true }));
 expressApp.use(cookieParser());

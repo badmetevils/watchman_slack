@@ -1,10 +1,10 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Layout from './components/Layout';
-import 'antd/dist/antd.css'
+import 'antd/dist/antd.css';
 import './styles/reset.css';
 import './styles/global.scss';
-import "./styles/utils.scss"
+import './styles/utils.scss';
 import Home from './pages/Home';
 
 const App = () => {
