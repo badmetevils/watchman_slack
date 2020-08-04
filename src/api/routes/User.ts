@@ -59,7 +59,6 @@ router.post(pathName.getTimeLog, async (req: Request, res: Response) => {
 
 router.get(pathName.getActivityLog, async (req: Request, res: Response) => {
   const params = req.query;
-  console.log(params);
   if (!('id' in params && 'date' in params)) {
     return res
       .status(BAD_REQUEST)

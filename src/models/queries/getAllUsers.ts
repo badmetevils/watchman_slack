@@ -8,7 +8,7 @@ import { IUserModel } from '@models/interface/model';
  */
 const getAllUsers = async (): Promise<IUserModel[] | undefined> => {
   try {
-    const record = await db.table.user.findAll();
+    const record = await db.table.user.findAll({ order: [['name', 'ASC']] });
     return record;
   } catch (error) {
     logger.error(error);
