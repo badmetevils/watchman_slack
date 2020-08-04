@@ -20,7 +20,7 @@
     "jsx": "react",
     "noImplicitAny": true,
     "noImplicitThis": true,
-    "noUnusedParameters": true,
+    "noUnusedParameters": false,
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
     "strictNullChecks": false,

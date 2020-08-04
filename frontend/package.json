@@ -1,5 +1,5 @@
 {
-  "name": "boiler_plate",
+  "name": "watchman_front_end",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.10.1",
-    "@material-ui/core": "^4.11.0",
+    "antd": "^4.5.1",
     "core-js": "3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"

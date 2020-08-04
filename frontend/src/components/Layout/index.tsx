@@ -1,14 +1,12 @@
 import * as React from 'react';
-import { Container, Box } from '@material-ui/core';
+import style from './layout.module.scss';
 
 interface ILayoutProps {}
 
 const Layout: React.SFC<ILayoutProps> = ({ children }) => {
   return (
     <React.Fragment>
-      <Container>
-        <Box paddingY={'4rem'}>{children}</Box>
-      </Container>
+      <div className={style.main}>{children}</div>
     </React.Fragment>
   );
 };

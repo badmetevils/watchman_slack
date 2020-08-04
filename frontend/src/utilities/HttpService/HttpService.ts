@@ -39,7 +39,7 @@ class HttpService {
     });
   }
 
-  public request(url: string, config: IHttpConfigInterface, queryParam: object = {}) {
+  public request<T>(url: string, config: IHttpConfigInterface, queryParam: object = {}):Promise<T> {
     const c = this.mergeConfigs(config);
     const u = `${url}${ObjectToQueryString(queryParam, config?.encodeURI)}`;
     return fetch(u, c).then(response => {

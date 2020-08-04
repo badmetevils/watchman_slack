@@ -1,0 +1,34 @@
+$borderWidth: 1rem;
+$width: 8rem;
+$height: 8rem;
+.loader {
+  border: $borderWidth solid #3b75ff;
+  border-radius: 50%;
+  border-top: $borderWidth solid #eb2c06;
+  border-right: $borderWidth solid #fdb700;
+  border-bottom: $borderWidth solid #00a54f;
+  width: $width;
+  height: $height;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  display: flex;
+  justify-content: center;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
