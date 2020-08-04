@@ -49,3 +49,4 @@ dist
 development.env
 production.env
 yarn.*
+build

@@ -13,8 +13,8 @@ module.exports = merge(common, {
   stats: 'normal',
   bail: true,
   output: {
-    filename: '[name].js',
-    chunkFilename: '[name].js'
+    filename: '[name].[contenthash:5].js',
+    chunkFilename: '[name].[contenthash:5].js'
   },
 
   optimization: {
@@ -30,21 +30,23 @@ module.exports = merge(common, {
         parallel: true,
         sourceMap: false, // set to true if you want JS source maps
         terserOptions: {
-          compress: { pure_funcs: ['console.info', 'console.debug', 'console.warn', 'debugger', 'console.error'] }
+          compress: {
+            drop_console: true
+          }
         }
       }),
       new OptimizeCSSAssetsPlugin({})
     ]
   },
   plugins: [
-    new BundleAnalyzerPlugin(),
+    // new BundleAnalyzerPlugin(),
     new Webpack.DefinePlugin({
       NODE_ENV: JSON.stringify('production'),
       APP_ENV: ENDPOINTS
     }),
     new Webpack.optimize.ModuleConcatenationPlugin(),
     new MiniCssExtractPlugin({
-      filename: 'settlement.min.css'
+      filename: 'style.[contenthash:5].min.css'
     })
   ],
   module: {

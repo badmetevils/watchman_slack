@@ -4,8 +4,8 @@ import { Moment } from 'moment';
 import * as moment from 'moment';
 import http from '../../utilities/HttpService/HttpService';
 import style from './home.module.scss';
-import LogsModal from './LogsModal';
 import Loader from '../../components/Loader';
+const LogsModal = React.lazy(() => import('./LogsModal'));
 
 interface IUserList {
   slackID: string;
@@ -213,7 +213,9 @@ const Home = () => {
               width={380}
               title={`Detail for ${logsDetails?.user?.name} for ${logsDetails?.user?.date}`}
             >
-              <LogsModal data={logsDetails.data} />
+              <React.Suspense fallback={<Loader />}>
+                <LogsModal data={logsDetails.data} />
+              </React.Suspense>
             </Modal>
           ) : null}
         </React.Fragment>
