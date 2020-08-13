@@ -4,13 +4,20 @@ import SubscribePresence from '@watchman-rtm/SubscribePresence';
 import { updateArchiveStatusLogs } from '@models/queries';
 
 export default class Presence {
+  private archive: boolean;
+  constructor(archive: boolean = false) {
+    this.archive = archive;
+  }
+
   public async listen() {
     const listen = new ListenPresenceChange();
     await listen.listen();
   }
   public async subscribe() {
     // archive all the records before subscribe
-    await this.archiveStatusLogs();
+    if (this.archive) {
+      await this.archiveStatusLogs();
+    }
     const subscribe = new SubscribePresence();
     await subscribe.allSlackUsers();
   }

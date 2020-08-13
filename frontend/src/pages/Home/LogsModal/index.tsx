@@ -1,10 +1,7 @@
 import * as React from 'react';
 import { Table, Space, Tag } from 'antd';
 import * as moment from 'moment';
-import {
-  CheckCircleOutlined,
-  CloseCircleOutlined,
-} from '@ant-design/icons';
+import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 
 interface ILogsModal {
   data: any[];
@@ -13,7 +10,12 @@ interface ILogsModal {
 const LogsModal: React.SFC<ILogsModal> = props => {
   const columns = [
     {
-      title: 'Time',
+      title: 'Log Created at',
+      dataIndex: 'created_at',
+      width: '450'
+    },
+    {
+      title: 'Status Time',
       dataIndex: 'timestamp'
     },
     {
@@ -43,6 +45,7 @@ const LogsModal: React.SFC<ILogsModal> = props => {
     return {
       key: d.slackID + d.id,
       timestamp: moment(d.timestamp).format('hh:mm:ss A').toString(),
+      created_at: moment(d.created_at).format('hh:mm:ss A').toString(),
       status: d.status
     };
   });

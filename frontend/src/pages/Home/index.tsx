@@ -53,7 +53,7 @@ const Home = () => {
     }
   ];
 
-  const defaultStartDate = moment().subtract(90, 'days').format('YYYY-MM-DD');
+  const defaultStartDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
   const defaultEndDate = moment().format('YYYY-MM-DD');
 
   const endpoint = `${APP_ENV.apiHost.base_url}${APP_ENV.apiHost.version}`;
@@ -210,7 +210,7 @@ const Home = () => {
               visible={true}
               onCancel={() => setLogDetails(null)}
               footer={null}
-              width={380}
+              width={680}
               title={`Detail for ${logsDetails?.user?.name} for ${logsDetails?.user?.date}`}
             >
               <React.Suspense fallback={<Loader />}>
