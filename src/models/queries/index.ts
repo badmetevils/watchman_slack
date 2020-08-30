@@ -6,6 +6,8 @@ import getTimeLogByISlackIDAndDateRange from './getTimeLogByISlackIDAndDateRange
 import deleteStatusLogsByDate from './deleteStatusLogsByDate';
 import updateArchiveStatusLogs from './updateArchiveStatusLogs';
 import getStatusLogsByIdAndDate from './getStatusLogsByIdAndDate';
+import aggregateTimeLogByISlackIDAndDateRange from './aggregateTimeLogByISlackIDAndDateRange';
+
 export {
   getMostRecentStatusById,
   getTimeLogBySlackIDByDate,
@@ -14,5 +16,6 @@ export {
   getTimeLogByISlackIDAndDateRange,
   deleteStatusLogsByDate,
   updateArchiveStatusLogs,
-  getStatusLogsByIdAndDate
+  getStatusLogsByIdAndDate,
+  aggregateTimeLogByISlackIDAndDateRange
 };

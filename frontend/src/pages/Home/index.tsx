@@ -60,7 +60,10 @@ const Home = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [users, setUsers] = React.useState<IUserList[]>([]);
   const [selectedUser, setSelectedUser] = React.useState<string>('');
-  const [logs, setLogs] = React.useState([]);
+  const [logs, setLogs] = React.useState<{ data: any[]; sum: any }>({
+    data: [],
+    sum: {}
+  });
   const [logsDetails, setLogDetails] = React.useState<{ data: any[]; user: any }>(null);
   const [date, setDate] = React.useState<{ startDate: string; endDate: string }>({
     startDate: defaultStartDate,
@@ -90,7 +93,7 @@ const Home = () => {
       if (!!selectedUser) {
         body['id'] = selectedUser;
       }
-      const list: any = await http.request<{ data: any[]; status: 'SUCCESS' | 'FAILURE' }>(
+      const list: any = await http.request<{ data: any; status: 'SUCCESS' | 'FAILURE' }>(
         `${endpoint}/users/get_time_log`,
         {
           method: 'POST',
@@ -99,7 +102,7 @@ const Home = () => {
       );
 
       if (list.status === 'SUCCESS') {
-        const data = list.data.map((d: any, i: number) => {
+        const data = list.data.list.map((d: any, i: number) => {
           return {
             id: d.slackID,
             key: i + 1,
@@ -109,7 +112,7 @@ const Home = () => {
             awayInWorkingHours: d.awayInWorkingHours
           };
         });
-        setLogs(data);
+        setLogs({ data, sum: list.data.aggregation });
       }
     } catch (error) {
       console.log(error);
@@ -196,10 +199,18 @@ const Home = () => {
             <Col>
               <Table
                 columns={columns}
-                dataSource={logs}
+                dataSource={logs.data}
                 pagination={{ pageSize: 25, responsive: true, showSizeChanger: false, position: ['bottomCenter'] }}
                 scroll={{ y: 680 }}
                 bordered
+                footer={() => {
+                  return (
+                    <Row gutter={16} justify="space-around">
+                      <p> Total Away time in Working Hours: {logs.sum.awayInWorkingHours}</p>
+                      <p>Total Active Time in Non Working Hours: {logs.sum.activeInNonWorkingHours}</p>
+                    </Row>
+                  );
+                }}
               />
             </Col>
           </Row>

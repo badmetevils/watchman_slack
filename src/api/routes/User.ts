@@ -1,6 +1,11 @@
 import { Request, Response, Router } from 'express';
 import { BAD_REQUEST, CREATED, OK, ACCEPTED } from 'http-status-codes';
-import { getAllUsers, getTimeLogByISlackIDAndDateRange, getStatusLogsByIdAndDate } from '@models/queries';
+import {
+  getAllUsers,
+  getTimeLogByISlackIDAndDateRange,
+  getStatusLogsByIdAndDate,
+  aggregateTimeLogByISlackIDAndDateRange
+} from '@models/queries';
 import APIResponse from '@express-app/APIResponse';
 import logger from '@shared/Logger';
 import time from '@lib/time';
@@ -27,11 +32,6 @@ router.get(pathName.list, async (req: Request, res: Response) => {
 router.post(pathName.getTimeLog, async (req: Request, res: Response) => {
   const defaultDate = time().format('YYYY-MM-DD').toString();
   const { id, fromDate = defaultDate, toDate = defaultDate, limit = 10, offset = 0 } = req.body;
-  if (!fromDate) {
-    res
-      .status(BAD_REQUEST)
-      .json(APIResponse({ status: 'FAILURE', message: `one or more mandatory fields are missing` }));
-  }
   const startDate = time(fromDate);
   const endDate = time(toDate);
 
@@ -51,9 +51,23 @@ router.post(pathName.getTimeLog, async (req: Request, res: Response) => {
     limit,
     offset
   );
+  const aggregation = await aggregateTimeLogByISlackIDAndDateRange(
+    id,
+    startDate.format('YYYY-MM-DD').toString(),
+    endDate.format('YYYY-MM-DD').toString()
+  );
   if (!!records) {
     const data = records.map(r => r.get());
-    return res.status(ACCEPTED).json(APIResponse({ status: 'SUCCESS', data }));
+    const aggData = aggregation?.map(r => r.get())[0];
+    return res.status(ACCEPTED).json(
+      APIResponse({
+        status: 'SUCCESS',
+        data: {
+          list: data,
+          aggregation: aggData
+        }
+      })
+    );
   }
 });
 
