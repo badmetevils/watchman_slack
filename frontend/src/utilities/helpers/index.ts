@@ -47,4 +47,15 @@ export function ObjectToQueryString(obj: { [key: string]: any }, encodeURI: bool
       }
     }
     return '';
-  };
+ };
+  
+export const minutesToHoursAndMin = (min:number=0) => {
+  if (min > 60) {
+    let hours = ~~(min / 60);
+    let minutes = (min % 60)
+      return `${hours} hours  ${minutes!==0 ? `${minutes} minutes`:""}`;
+  } else {
+      return `${min} minutes`
+  }
+
+ }

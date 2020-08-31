@@ -6,6 +6,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const common = require('./webpack.common.js');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const { ENDPOINTS } = require('./cliargs');
+const SETTINGS = require("../configs/settings");
 
 module.exports = merge(common, {
   mode: 'production',
@@ -42,7 +43,8 @@ module.exports = merge(common, {
     // new BundleAnalyzerPlugin(),
     new Webpack.DefinePlugin({
       NODE_ENV: JSON.stringify('production'),
-      APP_ENV: ENDPOINTS
+      APP_ENV: ENDPOINTS,
+      SETTINGS:SETTINGS
     }),
     new Webpack.optimize.ModuleConcatenationPlugin(),
     new MiniCssExtractPlugin({

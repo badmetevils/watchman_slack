@@ -1,10 +1,27 @@
 import * as React from 'react';
-import { Row, Col, Select, DatePicker, Button, Divider, Table, Space, Modal, Badge } from 'antd';
+import {
+  Row,
+  Col,
+  Select,
+  DatePicker,
+  Button,
+  Divider,
+  Table,
+  Space,
+  Modal,
+  Badge,
+  Typography,
+  Card,
+  Tooltip,
+  Popover
+} from 'antd';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import http from '../../utilities/HttpService/HttpService';
 import style from './home.module.scss';
 import Loader from '../../components/Loader';
+import { minutesToHoursAndMin } from '../../utilities/helpers';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 const LogsModal = React.lazy(() => import('./LogsModal'));
 
 interface IUserList {
@@ -24,7 +41,7 @@ const Home = () => {
       width: '150px'
     },
     {
-      title: 'Away in Working hour (in minutes)',
+      title: 'Away in Working hour ',
       dataIndex: 'awayInWorkingHours',
       render: (text: any, record: any) => (
         <Space size="middle">
@@ -33,7 +50,7 @@ const Home = () => {
       )
     },
     {
-      title: 'Active in Non-Working hour (in minutes)',
+      title: 'Active in Non-Working hour',
       dataIndex: 'activeInNonWorkingHours',
       render: (text: any, record: any) => (
         <Space size="middle">
@@ -103,13 +120,26 @@ const Home = () => {
 
       if (list.status === 'SUCCESS') {
         const data = list.data.list.map((d: any, i: number) => {
+          // const activeInWorkingHours = 0;
+          // const now = moment().clone();
+          // const _startHours = parseFloat(`${SETTINGS.START_TIME}` || '10');
+          // const _endHours = parseFloat(`${SETTINGS.END_TIME}` || '19');
+          // const _currentHour = moment.duration(now.format('H:mm').toString()).abs().asHours();
+          // const _today12 = moment().startOf('day');
+          // const _startWorkTime = _today12.clone().add(_startHours, 'hour');
+          // const _endWorkTime = _today12.clone().add(_endHours, 'hour');
+          // if (_currentHour >= _startHours && _currentHour <= _endHours) {
+          //   const minutesElapsed = moment.duration(_startWorkTime.format("H:mm").toString()).abs().asMinutes();
+
+          // }
+
           return {
             id: d.slackID,
             key: i + 1,
             name: d.user.name,
             date: d.date,
-            activeInNonWorkingHours: d.activeInNonWorkingHours,
-            awayInWorkingHours: d.awayInWorkingHours
+            activeInNonWorkingHours: minutesToHoursAndMin(d.activeInNonWorkingHours),
+            awayInWorkingHours: minutesToHoursAndMin(d.awayInWorkingHours)
           };
         });
         setLogs({ data, sum: list.data.aggregation });
@@ -149,6 +179,66 @@ const Home = () => {
       startDate: _date[0].format('YYYY-MM-DD').toString(),
       endDate: _date[1].format('YYYY-MM-DD').toString()
     });
+  };
+
+  const renderCards = () => {
+    const totalWorkDays = moment(date.endDate).diff(moment(date.startDate), 'days');
+    const hoursPerDay = SETTINGS.END_TIME - SETTINGS.START_TIME;
+    const minPerDays = hoursPerDay * 60;
+    const totalWorkHours = minPerDays * totalWorkDays;
+    const totalActiveHours = totalWorkHours - logs.sum.awayInWorkingHours;
+    return (
+      <Row gutter={16}>
+        <Col span={12}>
+          <Card title={`Hour Information  (from ${date.startDate} to ${date.endDate})`} bordered={true}>
+            <p>
+              Active Time in Non Work Hours:{' '}
+              <Typography.Text type="success">{minutesToHoursAndMin(logs.sum.activeInNonWorkingHours)}</Typography.Text>
+            </p>
+            <p>
+              Active Time in Work Hours:{' '}
+              <Typography.Text type="success">{minutesToHoursAndMin(totalActiveHours)}</Typography.Text> /{' '}
+              <Typography.Text type="warning">{minutesToHoursAndMin(totalWorkHours)}</Typography.Text>
+            </p>
+
+            <p>
+              Total Active hours:{' '}
+              <Typography.Text type="success">
+                {minutesToHoursAndMin(totalActiveHours + (logs.sum.activeInNonWorkingHours || 0))}
+              </Typography.Text>
+            </p>
+          </Card>
+        </Col>
+        <Col span={12}>
+          <Card title="Summary" bordered={true}>
+            <p>Total Employess : {users.length}</p>
+            <p>Work Hours per Day : {hoursPerDay} hours </p>
+            <p>
+              Total Work Hours : {minutesToHoursAndMin(totalWorkHours)} ({totalWorkHours} minutes)
+              <Popover
+                content={() => {
+                  return (
+                    <div>
+                      <p>Formula : </p>
+                      <p>Total Days x Hours per days</p>
+                      <p>from Date : {date.startDate}</p>
+                      <p>end Date : {date.endDate}</p>
+                      <p>Total Days : {totalWorkDays}</p>
+                    </div>
+                  );
+                }}
+              >
+                <span>
+                  {'  '}
+                  <ExclamationCircleOutlined></ExclamationCircleOutlined>
+                </span>
+              </Popover>
+            </p>
+            <p></p>
+          </Card>
+        </Col>
+      </Row>
+    );
   };
 
   return (
@@ -195,6 +285,18 @@ const Home = () => {
         <Loader />
       ) : (
         <React.Fragment>
+          <Row gutter={16} justify="center">
+            <Typography.Title level={2}>
+              Working hours are from {SETTINGS.START_TIME}:00 to {SETTINGS.END_TIME}:00
+            </Typography.Title>
+          </Row>
+          <Row gutter={20} justify="center">
+            <Typography.Title level={5}>
+              a penalty off 1800 seconds (30 minutes) when away in working hours
+            </Typography.Title>
+          </Row>
+          {!!selectedUser  && !isLoading ? <div style={{ background: '#eee', padding: '2rem' }}>{renderCards()}</div> : null}
+
           <Row gutter={16}>
             <Col>
               <Table
@@ -205,10 +307,18 @@ const Home = () => {
                 bordered
                 footer={() => {
                   return (
-                    <Row gutter={16} justify="space-around">
-                      <p> Total Away time in Working Hours: {logs.sum.awayInWorkingHours}</p>
-                      <p>Total Active Time in Non Working Hours: {logs.sum.activeInNonWorkingHours}</p>
-                    </Row>
+                    <React.Fragment>
+                      <Row gutter={16} justify="space-around">
+                        Total Away time in Working Hours:
+                        <Typography.Text type="danger">
+                          <b>{minutesToHoursAndMin(logs.sum.awayInWorkingHours)}</b>
+                        </Typography.Text>
+                        Total Active Time in Non Working Hours:
+                        <Typography.Text type="success">
+                          <b>{minutesToHoursAndMin(logs.sum.activeInNonWorkingHours)}</b>
+                        </Typography.Text>
+                      </Row>
+                    </React.Fragment>
                   );
                 }}
               />

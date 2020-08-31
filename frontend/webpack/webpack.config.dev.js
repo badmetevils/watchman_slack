@@ -1,6 +1,7 @@
 const Webpack = require('webpack');
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
+const SETTINGS = require("../configs/settings");
 
 const { ENDPOINTS } = require('./cliargs');
 
@@ -21,7 +22,8 @@ module.exports = merge(common, {
   plugins: [
     new Webpack.DefinePlugin({
       NODE_ENV: JSON.stringify('development'),
-      APP_ENV: ENDPOINTS
+      APP_ENV: ENDPOINTS,
+      SETTINGS:SETTINGS
     })
   ],
   module: {
