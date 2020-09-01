@@ -1,20 +1,5 @@
 import * as React from 'react';
-import {
-  Row,
-  Col,
-  Select,
-  DatePicker,
-  Button,
-  Divider,
-  Table,
-  Space,
-  Modal,
-  Badge,
-  Typography,
-  Card,
-  Tooltip,
-  Popover
-} from 'antd';
+import { Row, Col, Select, DatePicker, Button, Divider, Table, Modal, Typography, Card, Popover } from 'antd';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import http from '../../utilities/HttpService/HttpService';
@@ -22,6 +7,7 @@ import style from './home.module.scss';
 import Loader from '../../components/Loader';
 import { minutesToHoursAndMin } from '../../utilities/helpers';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import columns from './column';
 const LogsModal = React.lazy(() => import('./LogsModal'));
 
 interface IUserList {
@@ -30,46 +16,6 @@ interface IUserList {
 }
 
 const Home = () => {
-  const columns = [
-    {
-      title: 'Name',
-      dataIndex: 'name'
-    },
-    {
-      title: 'Date',
-      dataIndex: 'date',
-      width: '150px'
-    },
-    {
-      title: 'Away in Working hour ',
-      dataIndex: 'awayInWorkingHours',
-      render: (text: any, record: any) => (
-        <Space size="middle">
-          <Badge color="#f40" text={record.awayInWorkingHours} />
-        </Space>
-      )
-    },
-    {
-      title: 'Active in Non-Working hour',
-      dataIndex: 'activeInNonWorkingHours',
-      render: (text: any, record: any) => (
-        <Space size="middle">
-          <Badge color="#87d068" text={record.activeInNonWorkingHours} />
-        </Space>
-      )
-    },
-    {
-      width: '120px',
-      title: 'Action',
-      key: 'action',
-      render: (text: any, record: any) => (
-        <Space size="middle">
-          <Button onClick={viewDetails(record)}>view logs </Button>
-        </Space>
-      )
-    }
-  ];
-
   const defaultStartDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
   const defaultEndDate = moment().format('YYYY-MM-DD');
 
@@ -168,6 +114,11 @@ const Home = () => {
     init();
     fetchData();
   }, []);
+  React.useEffect(() => {
+    if (!!selectedUser) {
+      fetchData();
+    }
+  }, [selectedUser]);
 
   function disabledDate(current: Moment) {
     // Can not select days before today and today
@@ -193,25 +144,24 @@ const Home = () => {
           <Card title={`Hour Information  (from ${date.startDate} to ${date.endDate})`} bordered={true}>
             <p>
               Active Time in Non Work Hours:{' '}
-              <Typography.Text type="success">{minutesToHoursAndMin(logs.sum.activeInNonWorkingHours)}</Typography.Text>
+              <span className='success'>{minutesToHoursAndMin(logs.sum.activeInNonWorkingHours)}</span>
             </p>
             <p>
-              Active Time in Work Hours:{' '}
-              <Typography.Text type="success">{minutesToHoursAndMin(totalActiveHours)}</Typography.Text> /{' '}
-              <Typography.Text type="warning">{minutesToHoursAndMin(totalWorkHours)}</Typography.Text>
+              Active Time in Work Hours: <span className='success'>{minutesToHoursAndMin(totalActiveHours)}</span> /{' '}
+              <span className='danger'>{minutesToHoursAndMin(totalWorkHours)}</span>
             </p>
 
             <p>
               Total Active hours:{' '}
-              <Typography.Text type="success">
+              <span className='success'>
                 {minutesToHoursAndMin(totalActiveHours + (logs.sum.activeInNonWorkingHours || 0))}
-              </Typography.Text>
+              </span>
             </p>
           </Card>
         </Col>
         <Col span={12}>
-          <Card title="Summary" bordered={true}>
-            <p>Total Employess : {users.length}</p>
+          <Card title='Summary' bordered={true}>
+            <p>Total Employees : {users.length}</p>
             <p>Work Hours per Day : {hoursPerDay} hours </p>
             <p>
               Total Work Hours : {minutesToHoursAndMin(totalWorkHours)} ({totalWorkHours} minutes)
@@ -246,13 +196,13 @@ const Home = () => {
       <Row gutter={[16, 16]}>
         <Col sm={24} md={8} xs={24}>
           <Select
-            className="w-100"
-            size="large"
+            className='w-100'
+            size='large'
             onChange={(value: string) => {
               setSelectedUser(value);
             }}
             allowClear
-            placeholder="Select User"
+            placeholder='Select User'
           >
             {users.map((u, i) => {
               return (
@@ -265,9 +215,9 @@ const Home = () => {
         </Col>
         <Col sm={18} md={12} xs={24}>
           <DatePicker.RangePicker
-            className="w-100"
+            className='w-100'
             disabledDate={disabledDate}
-            size="large"
+            size='large'
             onChange={onSelectDate}
             value={[moment(date.startDate), moment(date.endDate)]}
           >
@@ -275,7 +225,7 @@ const Home = () => {
           </DatePicker.RangePicker>
         </Col>
         <Col sm={6} md={4} xs={24}>
-          <Button type="primary" size="large" block onClick={fetchData}>
+          <Button type='primary' size='large' block onClick={fetchData}>
             Filter
           </Button>
         </Col>
@@ -285,22 +235,24 @@ const Home = () => {
         <Loader />
       ) : (
         <React.Fragment>
-          <Row gutter={16} justify="center">
+          <Row gutter={16} justify='center'>
             <Typography.Title level={2}>
               Working hours are from {SETTINGS.START_TIME}:00 to {SETTINGS.END_TIME}:00
             </Typography.Title>
           </Row>
-          <Row gutter={20} justify="center">
-            <Typography.Title level={5}>
+          <Row gutter={20} justify='center'>
+            <Typography.Title level={4}>
               a penalty off 1800 seconds (30 minutes) when away in working hours
             </Typography.Title>
           </Row>
-          {!!selectedUser  && !isLoading ? <div style={{ background: '#eee', padding: '2rem' }}>{renderCards()}</div> : null}
+          {!!selectedUser && !isLoading && logs.data.length !== 0 ? (
+            <div style={{ background: '#eee', padding: '2rem' }}>{renderCards()}</div>
+          ) : null}
 
           <Row gutter={16}>
             <Col>
               <Table
-                columns={columns}
+                columns={columns(viewDetails)}
                 dataSource={logs.data}
                 pagination={{ pageSize: 25, responsive: true, showSizeChanger: false, position: ['bottomCenter'] }}
                 scroll={{ y: 680 }}
@@ -308,15 +260,15 @@ const Home = () => {
                 footer={() => {
                   return (
                     <React.Fragment>
-                      <Row gutter={16} justify="space-around">
+                      <Row gutter={16} justify='space-around'>
                         Total Away time in Working Hours:
-                        <Typography.Text type="danger">
+                        <p className='danger'>
                           <b>{minutesToHoursAndMin(logs.sum.awayInWorkingHours)}</b>
-                        </Typography.Text>
+                        </p>
                         Total Active Time in Non Working Hours:
-                        <Typography.Text type="success">
+                        <p className='success'>
                           <b>{minutesToHoursAndMin(logs.sum.activeInNonWorkingHours)}</b>
-                        </Typography.Text>
+                        </p>
                       </Row>
                     </React.Fragment>
                   );

@@ -1,4 +1,4 @@
-export function isValidJson(str: any):boolean {
+export function isValidJson(str: any): boolean {
   try {
     var obj = JSON.parse(str);
     if (obj && typeof obj === 'object') {
@@ -11,11 +11,11 @@ export function isValidJson(str: any):boolean {
   return true;
 }
 
-export function ObjectToQueryString(obj: { [key: string]: any }, encodeURI: boolean = true):string {
-    let keys = Object.keys(obj);
-    if (keys.length == 0) {
-        return "";
-    }
+export function ObjectToQueryString(obj: { [key: string]: any }, encodeURI: boolean = true): string {
+  let keys = Object.keys(obj);
+  if (keys.length === 0) {
+    return '';
+  }
   let queryString = !!encodeURI
     ? keys
         .reduce(function (a, k) {
@@ -32,30 +32,31 @@ export function ObjectToQueryString(obj: { [key: string]: any }, encodeURI: bool
   return `?${queryString}`;
 }
 
-
- export const getCookie = (cname:string) => {
-    const name = cname + '=';
-    const decodedCookie = decodeURIComponent(document.cookie);
-    const ca = decodedCookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) === ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) === 0) {
-        return c.substring(name.length, c.length);
-      }
+export const getCookie = (cname: string) => {
+  const name = cname + '=';
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const ca = decodedCookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === ' ') {
+      c = c.substring(1);
     }
-    return '';
- };
-  
-export const minutesToHoursAndMin = (min:number=0) => {
+    if (c.indexOf(name) === 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return '';
+};
+
+export const minutesToHoursAndMin = (min: number = 0) => {
+  if (!min) {
+    return `0 minutes`;
+  }
   if (min > 60) {
     let hours = ~~(min / 60);
-    let minutes = (min % 60)
-      return `${hours} hours  ${minutes!==0 ? `${minutes} minutes`:""}`;
+    let minutes = min % 60;
+    return `${hours} hours  ${minutes !== 0 ? `${minutes} minutes` : ''}`;
   } else {
-      return `${min} minutes`
+    return `${min} minutes`;
   }
-
- }
+};
