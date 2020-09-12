@@ -1,5 +1,5 @@
 import db from '@models/index';
-import { IUserStatusLogModel, IUserTimeLog, IUserTimeLogModel } from './../models/interface/model.d';
+import { IUserTimeLog, IUserTimeLogModel } from './../models/interface/model.d';
 import logger from '@shared/Logger';
 import { getTimeLogBySlackIDByDate } from '@models/queries';
 import { IActiveAwayMinutes, IPresenceData } from '@typing/presence';
@@ -45,8 +45,8 @@ export default class TimeSheet {
         this.minutes.activeInNonWorkingHours + parseFloat(user.getDataValue('activeInNonWorkingHours'));
       const awayInWorkingHours = this.minutes.awayInWorkingHours + parseFloat(user.getDataValue('awayInWorkingHours'));
       const penaltyCount = this.isPenalized
-        ? parseInt(user.getDataValue('penaltyCount')) + 1
-        : parseInt(user.getDataValue('penaltyCount'));
+        ? parseInt(user.getDataValue('penaltyCount'), 10) + 1
+        : parseInt(user.getDataValue('penaltyCount'), 10);
 
       const record = await user.update({
         activeInNonWorkingHours,

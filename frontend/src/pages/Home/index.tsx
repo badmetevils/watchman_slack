@@ -85,7 +85,8 @@ const Home = () => {
             name: d.user.name,
             date: d.date,
             activeInNonWorkingHours: minutesToHoursAndMin(d.activeInNonWorkingHours),
-            awayInWorkingHours: minutesToHoursAndMin(d.awayInWorkingHours)
+            awayInWorkingHours: minutesToHoursAndMin(d.awayInWorkingHours),
+            awayInWorkingHoursNoPenalty: minutesToHoursAndMin(d.awayInWorkingHoursNoPenalty)
           };
         });
         setLogs({ data, sum: list.data.aggregation });

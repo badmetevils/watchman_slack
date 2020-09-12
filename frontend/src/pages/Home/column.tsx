@@ -16,8 +16,22 @@ const columns = (viewDetails: (data: string) => () => void) => {
       title: 'Away in Working hour ',
       dataIndex: 'awayInWorkingHours',
       render: (text: any, record: any) => (
-        <Space size="middle">
-          <Badge color="#f40" text={record.awayInWorkingHours} />
+        <Space size='middle'>
+          <Badge color='#f40' text={record.awayInWorkingHours} />
+        </Space>
+      )
+    },
+    {
+      title: (
+        <p style={{ textAlign: 'center' }}>
+          Away in Working hour <br />
+          <b>(NO PENALTY)</b>
+        </p>
+      ),
+      dataIndex: 'awayInWorkingHoursNoPenalty',
+      render: (text: any, record: any) => (
+        <Space size='middle'>
+          <Badge color='#f40' text={record.awayInWorkingHoursNoPenalty} />
         </Space>
       )
     },
@@ -25,8 +39,8 @@ const columns = (viewDetails: (data: string) => () => void) => {
       title: 'Active in Non-Working hour',
       dataIndex: 'activeInNonWorkingHours',
       render: (text: any, record: any) => (
-        <Space size="middle">
-          <Badge color="#87d068" text={record.activeInNonWorkingHours} />
+        <Space size='middle'>
+          <Badge color='#87d068' text={record.activeInNonWorkingHours} />
         </Space>
       )
     },
@@ -35,7 +49,7 @@ const columns = (viewDetails: (data: string) => () => void) => {
       title: 'Action',
       key: 'action',
       render: (text: any, record: any) => (
-        <Space size="middle">
+        <Space size='middle'>
           <Button onClick={viewDetails(record)}>view logs </Button>
         </Space>
       )
