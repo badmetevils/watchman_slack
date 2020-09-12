@@ -18,7 +18,7 @@ const LogsModal: React.SFC<ILogsModal> = props => {
           {record.created_at}
           {record.isPenalized ? (
             <Tag icon={<CaretUpOutlined />} color='error'>
-              + {SETTINGS.PENALTY / 60}
+              + {SETTINGS.PENALTY / 60} Minutes
             </Tag>
           ) : null}
         </Space>

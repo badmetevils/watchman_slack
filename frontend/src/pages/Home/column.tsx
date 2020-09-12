@@ -1,11 +1,22 @@
-import { Button, Badge, Space } from 'antd';
+import { Button, Badge, Space, Tag } from 'antd';
 import * as React from 'react';
-
+import { CaretUpOutlined } from '@ant-design/icons';
 const columns = (viewDetails: (data: string) => () => void) => {
   return [
     {
       title: 'Name',
-      dataIndex: 'name'
+      dataIndex: 'name',
+      width: '250px',
+      render: (text: any, record: any) => (
+        <Space size='middle'>
+          {record.name}
+          {record.penaltyCount ? (
+            <Tag icon={<CaretUpOutlined />} color='error'>
+              + {record.penaltyCount} penalties
+            </Tag>
+          ) : null}
+        </Space>
+      )
     },
     {
       title: 'Date',

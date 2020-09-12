@@ -86,7 +86,8 @@ const Home = () => {
             date: d.date,
             activeInNonWorkingHours: minutesToHoursAndMin(d.activeInNonWorkingHours),
             awayInWorkingHours: minutesToHoursAndMin(d.awayInWorkingHours),
-            awayInWorkingHoursNoPenalty: minutesToHoursAndMin(d.awayInWorkingHoursNoPenalty)
+            awayInWorkingHoursNoPenalty: minutesToHoursAndMin(d.awayInWorkingHoursNoPenalty),
+            penaltyCount: d.penaltyCount
           };
         });
         setLogs({ data, sum: list.data.aggregation });
@@ -144,19 +145,16 @@ const Home = () => {
         <Col span={12}>
           <Card title={`Hour Information  (from ${date.startDate} to ${date.endDate})`} bordered={true}>
             <p>
-              Active Time in Non Work Hours:{' '}
+              Total Away time in Working Hours:
+              <span className='danger'>{minutesToHoursAndMin(logs.sum.awayInWorkingHours)}</span>
+            </p>
+            <p>
+              Total Away time in Working Hours(NO PENALTY):
+              <span className='danger'>{minutesToHoursAndMin(logs.sum.sumAwayInWorkingHoursNoPenalty)}</span>
+            </p>
+            <p>
+              Total Active Time in Non Working Hours:
               <span className='success'>{minutesToHoursAndMin(logs.sum.activeInNonWorkingHours)}</span>
-            </p>
-            <p>
-              Active Time in Work Hours: <span className='success'>{minutesToHoursAndMin(totalActiveHours)}</span> /{' '}
-              <span className='danger'>{minutesToHoursAndMin(totalWorkHours)}</span>
-            </p>
-
-            <p>
-              Total Active hours:{' '}
-              <span className='success'>
-                {minutesToHoursAndMin(totalActiveHours + (logs.sum.activeInNonWorkingHours || 0))}
-              </span>
             </p>
           </Card>
         </Col>
@@ -253,27 +251,33 @@ const Home = () => {
           <Row gutter={16}>
             <Col>
               <Table
+                size='middle'
+                tableLayout='fixed'
                 columns={columns(viewDetails)}
                 dataSource={logs.data}
                 pagination={{ pageSize: 25, responsive: true, showSizeChanger: false, position: ['bottomCenter'] }}
-                scroll={{ y: 680 }}
+                scroll={{ y: 680, x: 1200 }}
                 bordered
-                footer={() => {
-                  return (
-                    <React.Fragment>
-                      <Row gutter={16} justify='space-around'>
-                        Total Away time in Working Hours:
-                        <p className='danger'>
-                          <b>{minutesToHoursAndMin(logs.sum.awayInWorkingHours)}</b>
-                        </p>
-                        Total Active Time in Non Working Hours:
-                        <p className='success'>
-                          <b>{minutesToHoursAndMin(logs.sum.activeInNonWorkingHours)}</b>
-                        </p>
-                      </Row>
-                    </React.Fragment>
-                  );
-                }}
+                // footer={() => {
+                //   return (
+                //     <React.Fragment>
+                //       <Row gutter={16} justify='space-around'>
+                //         Total Away time in Working Hours:
+                //         <p className='danger'>
+                //           <b>{minutesToHoursAndMin(logs.sum.awayInWorkingHours)}</b>
+                //         </p>
+                //         Total Away time in Working Hours(NO PENALTY):
+                //         <p className='danger'>
+                //           <b>{minutesToHoursAndMin(logs.sum.sumAwayInWorkingHoursNoPenalty)}</b>
+                //         </p>
+                //         Total Active Time in Non Working Hours:
+                //         <p className='success'>
+                //           <b>{minutesToHoursAndMin(logs.sum.activeInNonWorkingHours)}</b>
+                //         </p>
+                //       </Row>
+                //     </React.Fragment>
+                //   );
+                // }}
               />
             </Col>
           </Row>
