@@ -12,17 +12,23 @@ import time from '@lib/time';
  */
 const getMostRecentStatusById = async (
   slackID: string,
-  status: 'ACTIVE' | 'AWAY'
+  status?: 'ACTIVE' | 'AWAY'
 ): Promise<IUserStatusLogModel[] | undefined> => {
   try {
+    let where: any = {
+      slackID,
+      date: time().format('YYYY-MM-DD').toString(),
+      isArchived: false
+    };
+    if (!!status) {
+      where = {
+        ...where,
+        status
+      };
+    }
     return await db.table.userStatusLogs.findAll({
       limit: 1,
-      where: {
-        slackID,
-        status,
-        date: time().format('YYYY-MM-DD').toString(),
-        isArchived: false
-      },
+      where,
       order: [['created_at', 'DESC']]
     });
   } catch (error) {

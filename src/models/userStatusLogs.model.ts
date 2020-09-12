@@ -46,6 +46,11 @@ const userStatusLogModel = (db: Sequelize) => {
         type: DataTypes.BOOLEAN,
         field: 'is_archive',
         defaultValue: false
+      },
+      isPenalized: {
+        type: DataTypes.BOOLEAN,
+        field: 'is_penalized',
+        defaultValue: false
       }
     },
     {

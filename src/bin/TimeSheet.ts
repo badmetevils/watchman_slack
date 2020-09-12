@@ -10,40 +10,48 @@ import { IActiveAwayMinutes, IPresenceData } from '@typing/presence';
 export default class TimeSheet {
   private minutes: IActiveAwayMinutes;
   private user: IPresenceData;
+  private isPenalized: boolean;
   /**
    * @description: Creates an instance of TimeSheet.
    * @param {IActiveAwayMinutes} minutes : provide time for { activeInNonWorkingHours , awayInWorkingHours}
    * @param {IPresenceData} user : user with the slackID and the status
    * @memberof TimeSheet
    */
-  constructor(minutes: IActiveAwayMinutes, user: IPresenceData) {
+  constructor(minutes: IActiveAwayMinutes, user: IPresenceData, isPenalized?: boolean) {
     this.minutes = minutes;
     this.user = user;
+    this.isPenalized = isPenalized || false;
   }
 
   public async log() {
     const userFromDb = await getTimeLogBySlackIDByDate(this.user.slackID);
     if (Array.isArray(userFromDb) && userFromDb.length !== 0) {
       const user: IUserTimeLogModel = userFromDb[0];
-      await this.updateUserTimeLog(user, this.minutes);
+      await this.updateUserTimeLog(user);
     } else {
       const entry: IUserTimeLog = {
         slackID: this.user.slackID,
         activeInNonWorkingHours: this.minutes.activeInNonWorkingHours,
-        awayInWorkingHours: this.minutes.awayInWorkingHours
+        awayInWorkingHours: this.minutes.awayInWorkingHours,
+        penaltyCount: this.isPenalized ? 1 : 0
       };
       await this.createNewTimeLog(entry);
     }
   }
 
-  private async updateUserTimeLog(user: IUserTimeLogModel, logs: IActiveAwayMinutes) {
+  private async updateUserTimeLog(user: IUserTimeLogModel) {
     try {
       const activeInNonWorkingHours =
-        logs.activeInNonWorkingHours + parseFloat(user.getDataValue('activeInNonWorkingHours'));
-      const awayInWorkingHours = logs.awayInWorkingHours + parseFloat(user.getDataValue('awayInWorkingHours'));
+        this.minutes.activeInNonWorkingHours + parseFloat(user.getDataValue('activeInNonWorkingHours'));
+      const awayInWorkingHours = this.minutes.awayInWorkingHours + parseFloat(user.getDataValue('awayInWorkingHours'));
+      const penaltyCount = this.isPenalized
+        ? parseInt(user.getDataValue('penaltyCount')) + 1
+        : parseInt(user.getDataValue('penaltyCount'));
+
       const record = await user.update({
         activeInNonWorkingHours,
-        awayInWorkingHours
+        awayInWorkingHours,
+        penaltyCount
       });
       if (!!record) {
         logger.info(`An entry updated for ${record.getDataValue('slackID')} at table '${record.constructor.name}'`);

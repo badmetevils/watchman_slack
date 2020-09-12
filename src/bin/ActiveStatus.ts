@@ -14,7 +14,7 @@ export default class ActiveStatus {
   }
 
   async log() {
-    const timestamp = time().toMySqlDateTime().toString();
+    const timestamp = await this.getTimeStampToLog();
     if (!!timestamp) {
       const record = await addUserStatusLog({
         slackID: this.user.slackID,
@@ -27,38 +27,57 @@ export default class ActiveStatus {
             record.constructor.name
           }' on ${timestamp} `
         );
+        this.updateTimeSheet();
       }
     }
   }
 
-  async updateTimeSheet() {
-    const lastAwayTimeStamp: Moment | undefined = await this.getLastAway();
-
-    if (!!lastAwayTimeStamp) {
-      const timeToLog = getMinutesWhenActive(lastAwayTimeStamp);
-      const timeSheet = new TimeSheet(timeToLog, this.user);
+  private async updateTimeSheet() {
+    const record = await this.getLastAway();
+    if (!!record) {
+      const timeToLog = getMinutesWhenActive(record.timeStamp);
+      const timeSheet = new TimeSheet(timeToLog, this.user, record.isPenalized);
       await timeSheet.log();
       if (process.env.NODE_ENV === 'development') {
         console.log({
           user: this.user,
-          m: lastAwayTimeStamp,
-          lastAwayAt: lastAwayTimeStamp.toMySqlDateTime().toString(),
+          record,
+          lastAwayAt: record.timeStamp.toMySqlDateTime().toString(),
           timeToLog
         });
       }
     }
   }
 
-  private async getLastAway(): Promise<Moment | undefined> {
+  private async getLastAway(): Promise<{ timeStamp: Moment; isPenalized: boolean } | undefined> {
     try {
       const lastAwayRecord = await getMostRecentStatusById(this.user.slackID, 'AWAY');
       if (Array.isArray(lastAwayRecord) && lastAwayRecord.length !== 0) {
         const ts = lastAwayRecord[0].get('timestamp');
-        const recentAwayTimestamp = time(ts).utcOffset(330).clone();
-        return recentAwayTimestamp;
+        const isPenalized = lastAwayRecord[0].get('isPenalized') || false;
+        const timeStamp = time(ts).utcOffset(330).clone();
+        return { timeStamp, isPenalized };
       }
     } catch (error) {
       logger.error(error);
     }
+  }
+  private async getTimeStampToLog(): Promise<string | null> {
+    const timestamp = time().toMySqlDateTime().toString();
+    const lastRecordById = await getMostRecentStatusById(this.user.slackID);
+    if (Array.isArray(lastRecordById) && lastRecordById.length !== 0) {
+      const lastStatus = lastRecordById[0].get('status');
+      /*
+       * NOTE:
+       * incase the last record was also "ACTIVE" we skip the update
+       * this case arises when socket timeout and  there is a resubscription occur
+       * This check avoid  false entry to  be record
+       */
+      if (lastStatus === 'ACTIVE') {
+        return null;
+      }
+      return timestamp;
+    }
+    return timestamp;
   }
 }
