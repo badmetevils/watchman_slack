@@ -39,6 +39,11 @@ const userTimeLogsModel = (db: Sequelize) => {
         set(valueToBeSet: number) {
           return this.setDataValue('activeInNonWorkingHours', Math.round(valueToBeSet));
         }
+      },
+      penaltyCount: {
+        type: DataTypes.FLOAT,
+        field: 'penalty_count',
+        defaultValue: 0
       }
     },
     {

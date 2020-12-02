@@ -9,6 +9,7 @@ export interface IUserStatusLog {
   slackID: string;
   status: 'ACTIVE' | 'AWAY';
   isArchived?: boolean;
+  isPenalized?: boolean;
   id?: string;
   timestamp: string;
   date?: string;
@@ -22,6 +23,7 @@ export interface IUserTimeLog {
   date?: string;
   awayInWorkingHours?: number;
   activeInNonWorkingHours?: number;
+  penaltyCount?: number;
   createdAt?: string;
   updatedAt?: string;
 }

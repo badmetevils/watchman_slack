@@ -57,14 +57,26 @@ router.post(pathName.getTimeLog, async (req: Request, res: Response) => {
     endDate.format('YYYY-MM-DD').toString()
   );
   if (!!records) {
-    const data = records.map(r => r.get());
+    let sumAwayInWorkingHoursNoPenalty = 0;
+    const data = records.map(r => {
+      const record = r.get();
+      const penalty = parseInt(process.env.PENALTY_IN_SECONDS || '1800', 10) / 60;
+      const awayInWorkingHoursNoPenalty = record.awayInWorkingHours - record.penaltyCount * penalty;
+      const mod = {
+        ...record,
+        awayInWorkingHoursNoPenalty
+      };
+      sumAwayInWorkingHoursNoPenalty += awayInWorkingHoursNoPenalty;
+      // console.log(mod);
+      return mod;
+    });
     const aggData = aggregation?.map(r => r.get())[0];
     return res.status(ACCEPTED).json(
       APIResponse({
         status: 'SUCCESS',
         data: {
           list: data,
-          aggregation: aggData
+          aggregation: { ...aggData, sumAwayInWorkingHoursNoPenalty }
         }
       })
     );

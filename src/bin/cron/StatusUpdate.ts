@@ -4,14 +4,14 @@ import Presence from '@bin/Presence';
 
 export default class StatusUpdateAt12 {
   public run() {
-    // This will fetch status of all user at 11:58 PM on every day and record the entry
+    // This will fetch status of all user at At minute 5 past every 8th hour.
 
     cron.schedule(
-      ' 0 55 23 * * * *',
+      '5 */8 * * *',
       async () => {
         try {
           logger.info('re-subscribing over cron');
-          const presence = new Presence(true);
+          const presence = new Presence();
           await presence.subscribe();
         } catch (error) {
           logger.error('An error occurred while re-subscribing over cron');

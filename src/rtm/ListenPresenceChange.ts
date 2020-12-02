@@ -13,12 +13,10 @@ export default class ListenPresenceChange {
       if (presence === 'active') {
         const status = new ActiveStatus(data);
         await status.log();
-        await status.updateTimeSheet();
       }
       if (presence === 'away') {
         const status = new AwayStatus(data);
         await status.log();
-        await status.updateTimeSheet();
       }
     });
   }
