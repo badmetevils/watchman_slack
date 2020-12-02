@@ -67,7 +67,7 @@ router.post(pathName.getTimeLog, async (req: Request, res: Response) => {
         awayInWorkingHoursNoPenalty
       };
       sumAwayInWorkingHoursNoPenalty += awayInWorkingHoursNoPenalty;
-      console.log(mod);
+      // console.log(mod);
       return mod;
     });
     const aggData = aggregation?.map(r => r.get())[0];

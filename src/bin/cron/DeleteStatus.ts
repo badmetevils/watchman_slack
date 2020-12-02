@@ -5,9 +5,9 @@ import time from '@lib/time';
 
 export default class DeleteStatusLogs {
   public run() {
-    // This will   run on 23:55 on every 1st of month 55 23 1 * *
+    // This will   run on At 00:05 on day-of-month 1 in every 6th month.
     cron.schedule(
-      '55 23 1 * *',
+      '5 0 1 */6 *',
       async () => {
         try {
           const date = time().format('YYYY-MM-DD').toString();
